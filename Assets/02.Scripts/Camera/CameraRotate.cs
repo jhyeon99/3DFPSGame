@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 // 역할: 마우스를 움직이면 카메라를 그 방향으로 회전하고 싶다.
 public class CameraRotate : MonoBehaviour
@@ -14,7 +16,7 @@ public class CameraRotate : MonoBehaviour
         // 1. 마우스 입력을 받는다.
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        Debug.Log($"mouseX: {mouseX}, mouseY: {mouseY}");
+        GameLogger.Log($"mouseX: {mouseX}, mouseY: {mouseY}");
 
         // 2. 마우스 입력 만큼 회전값을 누적한다.
         _accumulationX += mouseX * _rotationSpeed * Time.deltaTime;

@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (_target == null)
         {
-            Debug.LogWarning("[CameraFollow] No target found");
+            GameLogger.Info("[CameraFollow] No target found");
         }
     }
     
