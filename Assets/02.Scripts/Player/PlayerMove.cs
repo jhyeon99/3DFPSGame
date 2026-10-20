@@ -48,7 +48,6 @@ public class PlayerMove : MonoBehaviour
         // 3. 중력을 누적한다.
         if (_characterController.isGrounded == false)
         {
-            _yVelocity += Gravity * Time.deltaTime;
             _coyoteTimer -= Time.deltaTime; // 공중에 있으면 코요테 타이머 차감
 
             // 빠른 낙하: 떨어질 때는 중력을 더 세게 준다.
@@ -99,6 +98,12 @@ public class PlayerMove : MonoBehaviour
         
         // 6. 속도(방향과 속력)에 따라 이동한다.
         //transform.position += direction * _moveSpeed * Time.deltaTime;
-        _characterController.Move(velocity * Time.deltaTime);
+        CollisionFlags flags = _characterController.Move(velocity * Time.deltaTime);
+
+        // 천장 부딪힘: 머리가 천장에 닿으면 위로 가는 속도를 바로 0으로 만든다.
+        if ((flags & CollisionFlags.Above) != 0 && _yVelocity > 0)
+        {
+            _yVelocity = 0f;
+        }
     }
 }
