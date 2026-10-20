@@ -10,10 +10,28 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _fireInterval = 0.1f;
+    [SerializeField] private float _maxBullet = 50f;
+    [SerializeField] private float _reloadingTime = 0.5f;
     private float _fireTimer = 0f;
+    private float _currentBullet = 0f;
+    private bool _isReloading = false;
+    private float _reloadingTimer = 0f;
 
+    private void Awake()
+    {
+        _currentBullet = _maxBullet;
+    }
+    
     private void Update()
     {
+        _reloadingTimer -= Time.deltaTime;
+        if (_reloadingTimer <= 0f)
+        {
+            _isReloading = false;
+        }
+
+        if (_isReloading) return;
+        
         // 0. 발사 타이머를 지난 시간만큼 줄인다.
         _fireTimer -= Time.deltaTime;
         
@@ -23,10 +41,20 @@ public class PlayerGunFire : MonoBehaviour
             _fireTimer = _fireInterval;
             Shoot();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _currentBullet = _maxBullet;
+            _reloadingTimer = _reloadingTime;
+            _isReloading = true;
+        }
     }
 
     private void Shoot()
     {
+        if (_currentBullet <= 0) return;
+        _currentBullet--;
+        
         // Ray: 레이저(시작 위치, 날아갈 방향)
         // Physics.RayCast: 레이저를 발사
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
