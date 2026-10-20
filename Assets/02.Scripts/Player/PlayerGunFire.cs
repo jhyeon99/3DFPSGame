@@ -6,14 +6,21 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField]
     private ParticleSystem _hitEffectPrefab;
     
-    private float _range = 100f;
-    private float _damage = 10f;
+    [Header("스탯")]
+    [SerializeField] private float _range = 100f;
+    [SerializeField] private float _damage = 10f;
+    [SerializeField] private float _fireInterval = 0.1f;
+    private float _fireTimer = 0f;
 
     private void Update()
     {
+        // 0. 발사 타이머를 지난 시간만큼 줄인다.
+        _fireTimer -= Time.deltaTime;
+        
         // 1. 마우스 왼쪽 버튼 입력 받기
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") && _fireTimer <= 0f)
         {
+            _fireTimer = _fireInterval;
             Shoot();
         }
     }
