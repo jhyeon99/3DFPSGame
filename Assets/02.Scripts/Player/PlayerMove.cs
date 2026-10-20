@@ -21,6 +21,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("조작감 개선")]
     [SerializeField] private float _coyoteTime = 0.15f; // 코요테 타임 유예 시간
+    [SerializeField] private float _fallMultiplier = 2.0f; // 빠른 낙하 중력 배수
     private float _coyoteTimer = 0f; // 코요테 타임 타이머
 
     private CharacterController _characterController;
@@ -49,6 +50,15 @@ public class PlayerMove : MonoBehaviour
         {
             _yVelocity += Gravity * Time.deltaTime;
             _coyoteTimer -= Time.deltaTime; // 공중에 있으면 코요테 타이머 차감
+
+            // 빠른 낙하: 떨어질 때는 중력을 더 세게 준다.
+            float currentGravity = Gravity;
+            if (_yVelocity < 0)
+            {
+                currentGravity *= _fallMultiplier;
+            }
+
+            _yVelocity += currentGravity * Time.deltaTime;
         }
         else
         {
