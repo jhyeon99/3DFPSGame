@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
     private const float Gravity = -20f;
+    private const float DefaultGravity = -2f;
     private float _yVelocity = 0f; // 위아래 속도, 매 프레임마다 중력 가속도가 붙는다.
     
     [SerializeField] private float _moveSpeed = 7f;
@@ -17,7 +18,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _staminaRecoveryPerSec = 20f;
     [SerializeField] private Image _staminaBar;
     
-    private float _currentStamina;
+    private float _currentStamina = 0f;
     
     private CharacterController _characterController;
     
@@ -53,7 +54,7 @@ public class PlayerMove : MonoBehaviour
         else
         {
             // 땅에 서있으면 중력 초기화
-            _yVelocity = 0f;
+            _yVelocity = DefaultGravity;
             _canDoubleJump = false;
         }
 
