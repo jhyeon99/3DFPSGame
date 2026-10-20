@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -10,15 +10,28 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _dashSpeed = 12f;
     [SerializeField] private float _jumpPower = 10f;
     
+    [Header("Stamina")]
+    [SerializeField] private float _maxStamina = 100f;
+    [SerializeField] private float _dashStaminaPerSec = 10f;
+    [SerializeField] private float _jumpStaminaPerOnce = 20f;
+    [SerializeField] private float _staminaRecoveryPerSec = 20f;
+    [SerializeField] private Image _staminaBar;
+    
+    [SerializeField] private float _currentStamina;
+    
     private CharacterController _characterController;
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        
+        _currentStamina =  _maxStamina;
     }
     
     private void Update()
     {
+        _currentStamina = Mathf.Min(_currentStamina + _staminaRecoveryPerSec * Time.deltaTime, _maxStamina);
+        
         // 1. 키보드 입력을 받는다.
         float h = Input.GetAxisRaw("Horizontal"); // -1, 0, 1
         float v = Input.GetAxisRaw("Vertical"); // -1, 0, 1
@@ -42,17 +55,27 @@ public class PlayerMove : MonoBehaviour
         }
 
         // 4. 만약에 점프키를 누르면 && 땅이라면 ... 점프를 한다.
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && _currentStamina >= _jumpStaminaPerOnce)
         {
             _yVelocity = _jumpPower;
+            _currentStamina -= _jumpStaminaPerOnce;
         }
+
         
         // 5. 속도를 구한다.
-        float speed = Input.GetKey(KeyCode.LeftShift) ? _dashSpeed : _moveSpeed;
+        bool isDashing = Input.GetKey(KeyCode.LeftShift) && _currentStamina >= _dashStaminaPerSec * Time.deltaTime;
+        if (isDashing)
+        {
+            _currentStamina -= _dashStaminaPerSec * Time.deltaTime;
+        }
+            
+        float speed = isDashing ? _dashSpeed : _moveSpeed;
         Vector3 velocity = direction * speed;
         velocity.y = _yVelocity;
         
         // 6. 속도(방향과 속력)에 따라 이동한다.
         _characterController.Move(velocity * Time.deltaTime);
+        
+        _staminaBar.fillAmount = _currentStamina / _maxStamina;
     }
 }
