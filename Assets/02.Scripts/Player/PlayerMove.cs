@@ -18,7 +18,11 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _staminaRecovery = 15f;
     [SerializeField] private float _sprintCost = 10f;
     [SerializeField] private float _jumpCost = 20f;
-    
+
+    [Header("조작감 개선")]
+    [SerializeField] private float _coyoteTime = 0.15f; // 코요테 타임 유예 시간
+    private float _coyoteTimer = 0f; // 코요테 타임 타이머
+
     private CharacterController _characterController;
 
     private void Awake()
@@ -44,20 +48,27 @@ public class PlayerMove : MonoBehaviour
         if (_characterController.isGrounded == false)
         {
             _yVelocity += Gravity * Time.deltaTime;
+            _coyoteTimer -= Time.deltaTime; // 공중에 있으면 코요테 타이머 차감
         }
         else
         {
             // 땅에 서있으면 중력 초기화
             _yVelocity = -1f;
             _jumpCount = 0;
+            _coyoteTimer = _coyoteTime; // 코요테 타이머 초기화
         }
 
         // 4. 만약에 점프키를 누르면 && 점프 카운트가 2 이하라면 ... 점프를 한다.
-        if (Input.GetButtonDown("Jump") && _jumpCount < MaxJumps && _stamina >= _jumpCost)
+        // 코요테 타임 적용: 첫 점프는 땅에 있거나 코요테 시간 내라면 허용
+        bool canFirstJump = _jumpCount == 0 && _coyoteTimer > 0f;
+        bool canMultiJump = _jumpCount > 0 && _jumpCount < MaxJumps;
+
+        if (Input.GetButtonDown("Jump") && (canFirstJump || canMultiJump) && _stamina >= _jumpCost)
         {
             _yVelocity = _jumpPower;
             _jumpCount++;
             _stamina -= _jumpCost;
+            _coyoteTimer = 0f; // 점프 직후 코요테 타임 종료
         }
         
         // 5. 속도를 구한다.
