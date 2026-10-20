@@ -17,8 +17,11 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _staminaRecoveryPerSec = 20f;
     [SerializeField] private Image _staminaBar;
     
+    private float _currentStamina;
     
     private CharacterController _characterController;
+    
+    private bool _canDoubleJump = false;
 
     private void Awake()
     {
@@ -51,13 +54,24 @@ public class PlayerMove : MonoBehaviour
         {
             // 땅에 서있으면 중력 초기화
             _yVelocity = 0f;
+            _canDoubleJump = false;
         }
 
         // 4. 만약에 점프키를 누르면 && 땅이라면 ... 점프를 한다.
         if (Input.GetButtonDown("Jump") && _currentStamina >= _jumpStaminaPerOnce)
         {
-            _yVelocity = _jumpPower;
-            _currentStamina -= _jumpStaminaPerOnce;
+            if (_characterController.isGrounded)
+            {
+                _yVelocity = _jumpPower;
+                _currentStamina -= _jumpStaminaPerOnce;
+                _canDoubleJump = true;
+            }
+            else if (_canDoubleJump)
+            {
+                _yVelocity = _jumpPower;
+                _currentStamina -= _jumpStaminaPerOnce;
+                _canDoubleJump = false;
+            }
         }
 
         
