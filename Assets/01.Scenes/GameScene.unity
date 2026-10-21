@@ -677,8 +677,8 @@ MonoBehaviour:
   _range: 100
   _damage: 10
   _fireInterval: 0.1
-  _maxBullet: 50
-  _reloadingTime: 1
+  _maxBullet: 30
+  _reloadingTime: 3
 --- !u!1 &241783003
 GameObject:
   m_ObjectHideFlags: 0

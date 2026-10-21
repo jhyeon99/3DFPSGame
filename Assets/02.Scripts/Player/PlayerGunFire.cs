@@ -24,37 +24,43 @@ public class PlayerGunFire : MonoBehaviour
     
     private void Update()
     {
-        _reloadingTimer -= Time.deltaTime;
-        if (_reloadingTimer <= 0f)
-        {
-            _isReloading = false;
-        }
-
-        if (_isReloading) return;
-        
         // 0. 발사 타이머를 지난 시간만큼 줄인다.
         _fireTimer -= Time.deltaTime;
         
         // 1. 마우스 왼쪽 버튼 입력 받기
-        if (Input.GetButton("Fire1") && _fireTimer <= 0f)
+        if (Input.GetButton("Fire1") && _fireTimer <= 0f && _currentBullet > 0)
         {
+            _currentBullet--;
             _fireTimer = _fireInterval;
             Shoot();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        // 2. R키 누르면 총알 재장전
+        if (Input.GetButtonDown("Reload") && _isReloading == false)
         {
-            _currentBullet = _maxBullet;
-            _reloadingTimer = _reloadingTime;
+            _reloadingTimer = 0f;
             _isReloading = true;
+        }
+        
+        // 3. 재장전 중
+        if (_isReloading)
+        {
+            _reloadingTimer += Time.deltaTime;
+            if (_reloadingTimer >= _reloadingTime)
+            {
+                _isReloading = false;
+                Reloading();
+            }
         }
     }
 
-    private void Shoot()
+    private void Reloading()
     {
-        if (_currentBullet <= 0) return;
-        _currentBullet--;
-        
+        _currentBullet = _maxBullet;
+    }
+
+    private void Shoot()
+    {   
         // Ray: 레이저(시작 위치, 날아갈 방향)
         // Physics.RayCast: 레이저를 발사
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
