@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // 마우스 왼쪽 버튼을 누르면 바라보는 방향으로 총알을 발사하고 싶다.
@@ -11,11 +12,11 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _fireInterval = 0.1f;
     [SerializeField] private float _maxBullet = 50f;
-    [SerializeField] private float _reloadingTime = 0.5f;
+    [SerializeField] private float _reloadingTime = 3f;
+    
     private float _fireTimer = 0f;
     private float _currentBullet = 0f;
-    private bool _isReloading = false;
-    private float _reloadingTimer = 0f;
+    private Coroutine _reloadCoroutine;
 
     private void Awake()
     {
@@ -33,30 +34,34 @@ public class PlayerGunFire : MonoBehaviour
             _currentBullet--;
             _fireTimer = _fireInterval;
             Shoot();
+            
+            // 이 방식은 이 모노비헤이비어가 등록한 모든 코루틴을 실행 취소 
+            //StopAllCoroutines();
+            if (_reloadCoroutine != null)
+            {
+                StopCoroutine(_reloadCoroutine);
+                Debug.Log("재장전 취소");
+                _reloadCoroutine = null;
+            }
         }
 
         // 2. R키 누르면 총알 재장전
-        if (Input.GetButtonDown("Reload") && _isReloading == false)
+        if (Input.GetButtonDown("Reload") && _reloadCoroutine == null)
         {
-            _reloadingTimer = 0f;
-            _isReloading = true;
-        }
-        
-        // 3. 재장전 중
-        if (_isReloading)
-        {
-            _reloadingTimer += Time.deltaTime;
-            if (_reloadingTimer >= _reloadingTime)
-            {
-                _isReloading = false;
-                Reloading();
-            }
+            _reloadCoroutine = StartCoroutine(Reloading_Coroutine());
         }
     }
 
-    private void Reloading()
+    private IEnumerator Reloading_Coroutine()
     {
+        Debug.Log("재장전 시작");
+        
+        yield return new WaitForSeconds(_reloadingTime);
+        
         _currentBullet = _maxBullet;
+        
+        Debug.Log("재장전 종료");
+        _reloadCoroutine = null;
     }
 
     private void Shoot()
