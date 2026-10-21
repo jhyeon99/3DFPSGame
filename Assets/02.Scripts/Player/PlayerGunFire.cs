@@ -21,6 +21,12 @@ public class PlayerGunFire : MonoBehaviour
     {
         _currentBullet = _maxBullet;
     }
+
+    private void Start()
+    {
+        // 피격 이펙트 풀을 미리 만들어 둔다 (EffectPool 인스펙터에서 미리 만들기 개수 설정 가능)
+        EffectPool.Instance.Register(_hitEffectPrefab);
+    }
     
     private void Update()
     {
@@ -71,10 +77,8 @@ public class PlayerGunFire : MonoBehaviour
         if (isHit)
         {
             // Debug.Log($"{hitInfo.collider.name}이 총알에 맞았다, 데미지: {_damage}");
-            ParticleSystem effect = Instantiate(_hitEffectPrefab);
-            effect.transform.position = hitInfo.point; // 맞은 자리
-            effect.transform.forward = hitInfo.normal; // 수직 위치로 회전
-            effect.Play();
+            // 맞은 자리에서, 표면에 수직인 방향으로 이펙트 재생 (풀에서 꺼내고 재생이 끝나면 자동 반납)
+            EffectPool.Instance.Play(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
         }
     }
 }
