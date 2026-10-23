@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public enum GameState
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     private GameState _state = GameState.Ready;
     public GameState State => _state;
+    
+    [SerializeField] private TextMeshProUGUI _stateText;
     
     private void Awake()
     {
@@ -34,7 +37,12 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator StartSequence_Coroutine()
     {
-        yield return new WaitForSeconds(2f);
+        _stateText.gameObject.SetActive(true);
+        _stateText.text = "준비";
+        yield return new WaitForSeconds(1.5f);
+        _stateText.text = "시작!";
+        yield return new WaitForSeconds(0.5f);
+        _stateText.gameObject.SetActive(false);
         _state = GameState.Playing;
     }
 }
