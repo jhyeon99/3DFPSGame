@@ -20,10 +20,13 @@ public enum ZombieState
 public class Zombie : MonoBehaviour
 {
     [Header("스탯")] 
-    [SerializeField] private float _detectDistance  = 8;   // 플레이어를 발견하는 거리
-    [SerializeField] private float _combackDistance = 15;  // 처음 자리에서 이만큼 멀어지면 돌아가는 거리 
-    [SerializeField] private float _moveSpeed = 5;        // 이동속도
+    [SerializeField] private float _detectDistance  = 8;    // 플레이어를 발견하는 거리
+    [SerializeField] private float _combackDistance = 15;   // 처음 자리에서 이만큼 멀어지면 돌아가는 거리
+    [SerializeField] private float _attackRange = 1.5f;     // 공격 범위
+    [SerializeField] private float _attackInterval = 1.2f;  // 공격 간격
+    [SerializeField] private float _moveSpeed = 5;          // 이동속도
 
+    private float _attackTimer = 0f;
     private CharacterController _controller;
     private Vector3 _startPosition;
     private GameObject _player;
@@ -97,6 +100,15 @@ public class Zombie : MonoBehaviour
             return;
         }
         
+        // 플레이어가 공격 거리 안이면 공격한다.
+        if (Vector3.Distance(transform.position, _player.transform.position) <= _attackRange)
+        {
+            _attackTimer = 0f;
+            Debug.Log($"{_state} -> Attack");
+            _state = ZombieState.Attack;
+            return;
+        }
+        
         
         Vector3 direction = _player.transform.position - transform.position;
         direction.y = 0f;
@@ -126,8 +138,25 @@ public class Zombie : MonoBehaviour
         _controller.SimpleMove(direction * _moveSpeed);
     }
 
+    // 공격: 일정 시간마다 플레이어를 때린다.
     private void Attack()
     {
+        // 플레이어가 공격 사정 거리 밖으로 나가면 쫓아!
+        float distance = Vector3.Distance(transform.position, _player.transform.position);
+        if (distance > _attackRange)
+        {
+            Debug.Log($"{_state} -> Trace");
+            _state = ZombieState.Trace;
+        }
         
+        _attackTimer += Time.deltaTime;
+        if (_attackTimer >= _attackInterval)
+        {
+            // Todo. 공격 애니메이션 실행
+            // Todo. 플레이어를 때려!
+            Debug.Log("플레이어를 때렸습니다.");
+            _attackTimer = 0f;
+        }
+       
     }
 }
