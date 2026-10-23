@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // FSM(유한 상태 머신) : 유한개의 상태가 있고, 상태마다 행동을 다르게 함으로써 AI를 구현하는 유명한 방법
@@ -25,7 +26,9 @@ public class Zombie : MonoBehaviour
     [SerializeField] private float _attackRange = 1.5f;     // 공격 범위
     [SerializeField] private float _attackInterval = 1.2f;  // 공격 간격
     [SerializeField] private float _moveSpeed = 5;          // 이동속도
-
+    [SerializeField] private float _health = 30;
+    
+    
     private float _attackTimer = 0f;
     private CharacterController _controller;
     private Vector3 _startPosition;
@@ -63,13 +66,51 @@ public class Zombie : MonoBehaviour
             case ZombieState.Attack:
                 Attack();
                 break;
-            
-            case ZombieState.Hit:
-                break;
-            
-            case ZombieState.Death:
-                break;
         }
+    }
+
+    // 대미지를 받는다.
+    public void TakeDamage(float damage)
+    {
+        if (_state == ZombieState.Death)
+        {
+            return;
+        }
+        
+        _health -= damage;
+
+        StopAllCoroutines();
+        
+        if (_health > 0f)
+        {
+            // 잠깐 멈칫 하고 싶다!
+            Debug.Log($"{_state} -> Hit");
+            _state = ZombieState.Hit;
+            StartCoroutine(Hit_Coroutine());
+        }
+        else
+        {
+            Debug.Log($"{_state} -> Death");
+            _state = ZombieState.Death;
+            StartCoroutine(Death_Coroutine());
+        }
+       
+    }
+
+    private IEnumerator Hit_Coroutine()
+    {
+        yield return new WaitForSeconds(0.3f); // 잠깐 멈칫한다!
+        
+        // 맞았으니 쫒아온다.
+        Debug.Log($"{_state} -> Trace");
+        _state = ZombieState.Trace;
+    }
+    
+    private IEnumerator Death_Coroutine()
+    {
+        _controller.enabled = false;
+        yield return new WaitForSeconds(0.5f); 
+        Destroy(gameObject);
     }
 
     // 대기: 제자리에서 플레이어를 기다린다.
