@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 15678901}
   - component: {fileID: 15678900}
   - component: {fileID: 15678899}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Leg 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 26414511}
   - component: {fileID: 26414510}
   - component: {fileID: 26414509}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,8 @@ GameObject:
   - component: {fileID: 210088784}
   - component: {fileID: 210088783}
   - component: {fileID: 210088787}
-  m_Layer: 0
+  - component: {fileID: 210088788}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -620,6 +621,8 @@ MonoBehaviour:
   _staminaRecovery: 15
   _sprintCost: 10
   _jumpCost: 20
+  _coyoteTime: 0.15
+  _fallMultiplier: 2
 --- !u!114 &210088785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,6 +662,7 @@ Transform:
   - {fileID: 15678898}
   - {fileID: 1363027448}
   - {fileID: 450949235}
+  - {fileID: 1791629249}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &210088787
@@ -677,8 +681,26 @@ MonoBehaviour:
   _range: 100
   _damage: 10
   _fireInterval: 0.1
-  _maxBullet: 30
-  _reloadingTime: 3
+  _maxBullet: 50
+  _reloadingTime: 1
+--- !u!114 &210088788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210088782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff4841349759e6540b9e6264aeaa5db1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBombFire
+  _firePoint: {fileID: 1791629249}
+  _bombPrefab: {fileID: 4018077707131185399, guid: 94a89b622ebd1224f84fa6cc52a6e262, type: 3}
+  _defaultThrowPower: 10
+  _maxThrowPower: 20
+  _chargeThrowPowerPerSec: 5
+  _startBomb: 10
 --- !u!1 &241783003
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,7 +1069,7 @@ GameObject:
   - component: {fileID: 362505962}
   - component: {fileID: 362505961}
   - component: {fileID: 362505960}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Leg 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1286,7 +1308,7 @@ GameObject:
   - component: {fileID: 417898814}
   - component: {fileID: 417898813}
   - component: {fileID: 417898815}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1395,7 +1417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 450949235}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1744,7 +1766,7 @@ GameObject:
   - component: {fileID: 985186108}
   - component: {fileID: 985186107}
   - component: {fileID: 985186106}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1856,7 +1878,7 @@ GameObject:
   - component: {fileID: 1332864813}
   - component: {fileID: 1332864812}
   - component: {fileID: 1332864811}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Eye 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1968,7 +1990,7 @@ GameObject:
   - component: {fileID: 1363027451}
   - component: {fileID: 1363027450}
   - component: {fileID: 1363027449}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Leg 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2192,7 +2214,7 @@ GameObject:
   - component: {fileID: 1490625239}
   - component: {fileID: 1490625238}
   - component: {fileID: 1490625237}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Leg 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2338,7 +2360,7 @@ GameObject:
   - component: {fileID: 1588562866}
   - component: {fileID: 1588562865}
   - component: {fileID: 1588562864}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Eye 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2562,7 +2584,7 @@ GameObject:
   - component: {fileID: 1666707584}
   - component: {fileID: 1666707583}
   - component: {fileID: 1666707582}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ear 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2662,6 +2684,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666707580}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1791629248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1791629249}
+  m_Layer: 6
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1791629249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791629248}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 1.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 210088786}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922570556
 GameObject:
   m_ObjectHideFlags: 0
@@ -2899,7 +2952,7 @@ GameObject:
   - component: {fileID: 2020128166}
   - component: {fileID: 2020128165}
   - component: {fileID: 2020128164}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3011,7 +3064,7 @@ GameObject:
   - component: {fileID: 2058373100}
   - component: {fileID: 2058373099}
   - component: {fileID: 2058373098}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ear 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
