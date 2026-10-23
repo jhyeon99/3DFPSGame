@@ -88,8 +88,23 @@ public class PlayerGunFire : MonoBehaviour
         if (isHit)
         {
             // Debug.Log($"{hitInfo.collider.name}이 총알에 맞았다, 데미지: {_damage}");
-            // 맞은 자리에서, 표면에 수직인 방향으로 이펙트 재생 (풀에서 꺼내고 재생이 끝나면 자동 반납)
-            EffectPool.Instance.Play(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            ParticleSystem effect = Instantiate(_hitEffectPrefab);
+            effect.transform.position = hitInfo.point; // 맞은 자리
+            effect.transform.forward = hitInfo.normal; // 수직 위치로 회전
+            effect.Play();
+            
+            DamageInfo damageInfo = new DamageInfo();
+            damageInfo.Value = _damage;
+            damageInfo.HitPoint = hitInfo.point;
+            damageInfo.HitNormal = hitInfo.normal;
+            
+            hitInfo.collider.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
+            
+            /*
+            hitInfo.collider.GetComponent<Zombie>()?.TakeDamage(_damage);
+            hitInfo.collider.GetComponent<Drum>()?.TakeDamage(_damage);
+            hitInfo.collider.GetComponent<Box>()?.TakeDamage(_damage);
+            */
         }
     }
 }
