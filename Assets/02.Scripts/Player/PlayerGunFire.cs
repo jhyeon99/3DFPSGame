@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // 마우스 왼쪽 버튼을 누르면 바라보는 방향으로 총알을 발사하고 싶다.
@@ -11,11 +12,11 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _fireInterval = 0.1f;
     [SerializeField] private float _maxBullet = 50f;
-    [SerializeField] private float _reloadingTime = 0.5f;
+    [SerializeField] private float _reloadingTime = 3f;
+    
     private float _fireTimer = 0f;
     private float _currentBullet = 0f;
-    private bool _isReloading = false;
-    private float _reloadingTimer = 0f;
+    private Coroutine _reloadCoroutine;
 
     private void Awake()
     {
@@ -30,37 +31,47 @@ public class PlayerGunFire : MonoBehaviour
     
     private void Update()
     {
-        _reloadingTimer -= Time.deltaTime;
-        if (_reloadingTimer <= 0f)
-        {
-            _isReloading = false;
-        }
-
-        if (_isReloading) return;
-        
         // 0. 발사 타이머를 지난 시간만큼 줄인다.
         _fireTimer -= Time.deltaTime;
         
         // 1. 마우스 왼쪽 버튼 입력 받기
-        if (Input.GetButton("Fire1") && _fireTimer <= 0f)
+        if (Input.GetButton("Fire1") && _fireTimer <= 0f && _currentBullet > 0)
         {
+            _currentBullet--;
             _fireTimer = _fireInterval;
             Shoot();
+            
+            // 이 방식은 이 모노비헤이비어가 등록한 모든 코루틴을 실행 취소 
+            //StopAllCoroutines();
+            if (_reloadCoroutine != null)
+            {
+                StopCoroutine(_reloadCoroutine);
+                Debug.Log("재장전 취소");
+                _reloadCoroutine = null;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        // 2. R키 누르면 총알 재장전
+        if (Input.GetButtonDown("Reload") && _reloadCoroutine == null)
         {
-            _currentBullet = _maxBullet;
-            _reloadingTimer = _reloadingTime;
-            _isReloading = true;
+            _reloadCoroutine = StartCoroutine(Reloading_Coroutine());
         }
     }
 
-    private void Shoot()
+    private IEnumerator Reloading_Coroutine()
     {
-        if (_currentBullet <= 0) return;
-        _currentBullet--;
+        Debug.Log("재장전 시작");
         
+        yield return new WaitForSeconds(_reloadingTime);
+        
+        _currentBullet = _maxBullet;
+        
+        Debug.Log("재장전 종료");
+        _reloadCoroutine = null;
+    }
+
+    private void Shoot()
+    {   
         // Ray: 레이저(시작 위치, 날아갈 방향)
         // Physics.RayCast: 레이저를 발사
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
