@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
@@ -8,6 +9,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public float MaxHealth => _maxHealth;
     public float Health => _health;
 
+    [SerializeField]
+    private UI_HitEffect _uiHitEffect;
+
     private void Awake()
     {
         _health = _maxHealth;
@@ -15,6 +19,17 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        // Todo. 플레이어 피격
+        if (_health <= 0f) return;
+        
+        _health -= damageInfo.Value;
+
+        _uiHitEffect.Fade(0.7f);
+        
+        Debug.Log($"플레이어가 맞았다. 데미지 {damageInfo.Value}, 남은 체력 {_health}");
+        if (_health <= 0f)
+        {
+            Debug.Log("플레이어가 쓰러졌다!");
+            // Todo. 게임 오버
+        }
     }
 }

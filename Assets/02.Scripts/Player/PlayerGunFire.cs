@@ -31,6 +31,8 @@ public class PlayerGunFire : MonoBehaviour
     
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.Playing) return;
+        
         // 0. 발사 타이머를 지난 시간만큼 줄인다.
         _fireTimer -= Time.deltaTime;
         

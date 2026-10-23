@@ -32,6 +32,8 @@ public class PlayerMove : MonoBehaviour
     
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.Playing) return;
+        
         // 1. 키보드 입력을 받는다.
         float h = Input.GetAxisRaw("Horizontal"); // -1, 0, 1
         float v = Input.GetAxisRaw("Vertical"); // -1, 0, 1

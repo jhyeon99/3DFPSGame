@@ -23,6 +23,7 @@ public class Zombie : MonoBehaviour, IDamageable
     [Header("스탯")] 
     [SerializeField] private float _detectDistance  = 8;    // 플레이어를 발견하는 거리
     [SerializeField] private float _combackDistance = 15;   // 처음 자리에서 이만큼 멀어지면 돌아가는 거리
+    [SerializeField] private float _attackDamaga = 10f;     // 공격 데미지
     [SerializeField] private float _attackRange = 1.5f;     // 공격 범위
     [SerializeField] private float _attackInterval = 1.2f;  // 공격 간격
     [SerializeField] private float _moveSpeed = 5;          // 이동속도
@@ -58,6 +59,8 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if (GameManager.Instance.State != GameState.Playing) return;
+        
         switch (_state)
         {
             case ZombieState.Idle:
@@ -208,7 +211,16 @@ public class Zombie : MonoBehaviour, IDamageable
         if (_attackTimer >= _attackInterval)
         {
             // Todo. 공격 애니메이션 실행
-            // Todo. 플레이어를 때려!
+            
+            DamageInfo damageInfo = new DamageInfo()
+            {
+                Value = _attackDamaga,
+                HitPoint = _player.transform.position,
+                HitNormal = (transform.position - _player.transform.position).normalized,
+            };
+            
+            _player.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
+            
             Debug.Log("플레이어를 때렸습니다.");
             _attackTimer = 0f;
         }
