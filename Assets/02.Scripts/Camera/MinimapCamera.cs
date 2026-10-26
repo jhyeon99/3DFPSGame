@@ -5,25 +5,12 @@ using UnityEngine;
 public class MinimapCamera : MonoBehaviour
 {
     private Camera _camera;
-    
     [SerializeField] private Transform _target;
     [SerializeField] private float _height = 8f;
-
-    private void Start()
+    
+    private void Awake()
     {
         _camera = GetComponent<Camera>();
-    }
-    
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Equals))
-        {
-            _camera.orthographicSize -= 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.Minus))
-        {
-            _camera.orthographicSize += 1;
-        }
     }
     
     private void LateUpdate()
@@ -33,5 +20,15 @@ public class MinimapCamera : MonoBehaviour
         
         // 2. 아래를 보되, 대상이 쳐다보는 방향으로 카메라도 회전한다.
         transform.eulerAngles = new Vector3(90f, _target.eulerAngles.y, 0f);
+    }
+
+    public void ZoomIn()
+    {
+        _camera.orthographicSize -= 1;
+    }
+
+    public void ZoomOut()
+    {
+        _camera.orthographicSize += 1;
     }
 }
