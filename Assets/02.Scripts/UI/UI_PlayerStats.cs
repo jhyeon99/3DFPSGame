@@ -12,6 +12,7 @@ public class UI_PlayerStats : MonoBehaviour
 
     private void Start()
     {
+        RefreshHealth();
         _playerHealth.OnDamaged += RefreshHealth;
     }
     
