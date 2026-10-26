@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,20 @@ public class UI_HitEffect : MonoBehaviour
     {
         _image = GetComponent<Image>();
         _image.enabled = false;
+    }
+
+    private void Start()
+    {
+        PlayerHealth playerHealth = GameObject.FindAnyObjectByType<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.OnDamaged += OnPlayerDamaged;
+        }
+    }
+
+    private void OnPlayerDamaged()
+    {
+        Fade(0.7f);
     }
 
     public void Flash(float alpha)
