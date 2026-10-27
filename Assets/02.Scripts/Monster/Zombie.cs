@@ -142,7 +142,8 @@ public class Zombie : MonoBehaviour, IDamageable
     private IEnumerator Death_Coroutine()
     {
         StopAgent();
-        yield return new WaitForSeconds(0.5f); 
+        _animator.SetTrigger("Death");
+        yield return new WaitForSeconds(2.0f); 
         Destroy(gameObject);
     }
 
@@ -223,19 +224,21 @@ public class Zombie : MonoBehaviour, IDamageable
         {
             _animator.SetTrigger("StartAttack");
 
-            DamageInfo damageInfo = new DamageInfo()
-            {
-                Value = _attackDamaga,
-                HitPoint = _player.transform.position,
-                HitNormal = (transform.position - _player.transform.position).normalized,
-            };
-            
-            _player.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
-            
-            Debug.Log("플레이어를 때렸습니다.");
             _attackTimer = 0f;
         }
        
+    }
+
+    public void AttackAction()
+    {
+        DamageInfo damageInfo = new DamageInfo()
+        {
+            Value = _attackDamaga,
+            HitPoint = _player.transform.position,
+            HitNormal = (transform.position - _player.transform.position).normalized,
+        };
+
+        _player.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
     }
 
     private void StopAgent()
