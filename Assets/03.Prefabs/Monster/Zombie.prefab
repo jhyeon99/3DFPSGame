@@ -316,6 +316,8 @@ MonoBehaviour:
   _attackInterval: 1.2
   _moveSpeed: 5
   _maxHealth: 30
+  _jumpHeight: 3
+  _jumpSpeed: 6
   _bloodSprayPrefab: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
 --- !u!114 &4053250572590676637
 MonoBehaviour:

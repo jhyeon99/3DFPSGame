@@ -16,7 +16,8 @@ public enum ZombieState
     Trace,      // 추격: 플레이어를 쫓아간다.
     Comeback,    // 복귀: 처음 자리로 돌아간다.
     Attack,     // 공격: 일정 시간마다 플레이어를 때린다.
-    Hit,        // 피격: 공격(총알, 폭탄)을 받아 잠깐 멈칫한다.
+    Jump,       // 점프: 네비게이션 링크(낙하/점프 구간)를 포물선으로 넘어간다.
+    Hit,       // 피격: 공격(총알, 폭탄)을 받아 잠깐 멈칫한다.
     Death,      // 죽음: 쓰러지고 잠시 뒤 사라진다.
 }
 
@@ -32,6 +33,10 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private float _moveSpeed = 5;          // 이동속도
     [SerializeField] private float _maxHealth = 30;
     private float _health;
+
+    [Header("점프")]
+    [SerializeField] private float _jumpHeight = 2f;        // 포물선의 최고 높이 (출발/도착 지점 위로 이만큼 솟는다)
+    [SerializeField] private float _jumpSpeed = 6f;         // 점프 수평 이동속도
 
     [Header("이펙트")]
     [SerializeField]
@@ -66,7 +71,10 @@ public class Zombie : MonoBehaviour, IDamageable
         // 길을 찾아 걷게 해주는 컴포넌트 NavMeshAgent를 찾아서 참조
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _moveSpeed;
-        
+
+        // 오프메시 링크(낙하/점프 구간)는 직선으로 자동 통과하지 않고, 직접 포물선으로 넘는다.
+        _agent.autoTraverseOffMeshLink = false;
+
         _animator = GetComponentInChildren<Animator>();
         
         // 게임을 시작하면 플레이어를 찾는다.
@@ -171,6 +179,8 @@ public class Zombie : MonoBehaviour, IDamageable
     // 추격: 플레이어를 쫓아간다.
     private void Trace()
     {
+        if (TryStartJump()) return;
+
         // 처음 자리에서 너무 멀어지면 돌아간다.
         if (Vector3.Distance(transform.position, _startPosition) > _combackDistance)
         {
@@ -198,6 +208,8 @@ public class Zombie : MonoBehaviour, IDamageable
     // 복귀: 처음 자리로 돌아간다.
     private void Comeback()
     {
+        if (TryStartJump()) return;
+
         // 처음 자리에 도착하면 Idle
         if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
@@ -245,6 +257,49 @@ public class Zombie : MonoBehaviour, IDamageable
         };
 
         _player.GetComponent<IDamageable>()?.TakeDamage(damageInfo);
+    }
+
+    // 오프메시 링크 위에 도달했으면 점프를 시작한다.
+    private bool TryStartJump()
+    {
+        if (!_agent.isOnOffMeshLink) return false;
+
+        Debug.Log($"{_state} -> Jump");
+        StartCoroutine(Jump_Coroutine(_state, _agent.currentOffMeshLinkData.endPos));
+        _state = ZombieState.Jump;
+        return true;
+    }
+
+    // 현재 위치에서 링크 도착 지점까지 포물선으로 이동한다.
+    private IEnumerator Jump_Coroutine(ZombieState returnState, Vector3 endPos)
+    {
+        // 에이전트 높이(baseOffset)만큼 올려서 도착 지점에 발이 닿게 한다.
+        endPos.y += _agent.baseOffset;
+
+        Vector3 startPos = transform.position;
+        float duration = Mathf.Max(Vector3.Distance(startPos, endPos) / _jumpSpeed, 0.1f);
+
+        Vector3 flat = endPos - startPos;
+        flat.y = 0f;
+        if (flat != Vector3.zero)
+        {
+            transform.forward = flat.normalized;
+        }
+
+        for (float t = 0f; t < 1f; t += Time.deltaTime / duration)
+        {
+            // 출발->도착 직선 위에, 4h·t(1-t) 포물선 높이를 더한다. (t=0.5에서 최고점 h)
+            Vector3 position = Vector3.Lerp(startPos, endPos, t);
+            position.y += _jumpHeight * 4f * t * (1f - t);
+            transform.position = position;
+            yield return null;
+        }
+
+        transform.position = endPos;
+        _agent.CompleteOffMeshLink();
+
+        Debug.Log($"Jump -> {returnState}");
+        _state = returnState;
     }
 
     private void StopAgent()
