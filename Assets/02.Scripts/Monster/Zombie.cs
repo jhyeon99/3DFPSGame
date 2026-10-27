@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 // FSM(유한 상태 머신) : 유한개의 상태가 있고, 상태마다 행동을 다르게 함으로써 AI를 구현하는 유명한 방법
 // - "상태": 객체가 가질 수 있는 어떤 조건이나 상황
@@ -18,6 +19,7 @@ public enum ZombieState
     Death,      // 죽음: 쓰러지고 잠시 뒤 사라진다.
 }
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("스탯")] 
@@ -35,9 +37,9 @@ public class Zombie : MonoBehaviour, IDamageable
     private GameObject _bloodSprayPrefab;
     
     private float _attackTimer = 0f;
-    private CharacterController _controller;
     private Vector3 _startPosition;
     private GameObject _player;
+    private NavMeshAgent _agent;
 
     public float MaxHealth => _maxHealth;
     public float Health => _health;
@@ -49,8 +51,11 @@ public class Zombie : MonoBehaviour, IDamageable
     {
         _health = _maxHealth;
         
-        _controller = GetComponent<CharacterController>();
         _startPosition = transform.position;
+     
+        // 길을 찾아 걷게 해주는 컴포넌트 NavMeshAgent를 찾아서 참조
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = _moveSpeed;
         
         // 게임을 시작하면 플레이어를 찾는다.
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -125,7 +130,6 @@ public class Zombie : MonoBehaviour, IDamageable
     
     private IEnumerator Death_Coroutine()
     {
-        _controller.enabled = false;
         yield return new WaitForSeconds(0.5f); 
         Destroy(gameObject);
     }
@@ -166,14 +170,8 @@ public class Zombie : MonoBehaviour, IDamageable
             _state = ZombieState.Attack;
             return;
         }
-        
-        
-        Vector3 direction = _player.transform.position - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
 
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeed);
+        _agent.SetDestination(_player.transform.position);
     }
 
     // 복귀: 처음 자리로 돌아간다.
@@ -187,13 +185,7 @@ public class Zombie : MonoBehaviour, IDamageable
             return;
         }
         
-        // 처음 자리로 돌아간다
-        Vector3 direction = _startPosition - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeed);
+        _agent.SetDestination(_startPosition);
     }
 
     // 공격: 일정 시간마다 플레이어를 때린다.
