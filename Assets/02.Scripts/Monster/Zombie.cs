@@ -41,6 +41,7 @@ public class Zombie : MonoBehaviour, IDamageable
     private Vector3 _startPosition;
     private GameObject _player;
     private NavMeshAgent _agent;
+    private Animator _animator;
 
     public float MaxHealth => _maxHealth;
     public float Health => _health;
@@ -62,6 +63,8 @@ public class Zombie : MonoBehaviour, IDamageable
         // 길을 찾아 걷게 해주는 컴포넌트 NavMeshAgent를 찾아서 참조
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _moveSpeed;
+        
+        _animator = GetComponentInChildren<Animator>();
         
         // 게임을 시작하면 플레이어를 찾는다.
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -146,8 +149,6 @@ public class Zombie : MonoBehaviour, IDamageable
     // 대기: 제자리에서 플레이어를 기다린다.
     private void Idle()
     {
-        // Todo. Idle 애니메이션 실행
-        
         StopAgent();
 
         // 플레이어 가까워지면 Trace 상태로 전이한다.
@@ -155,6 +156,7 @@ public class Zombie : MonoBehaviour, IDamageable
         if (distance <= _detectDistance)
         {
             Debug.Log($"{_state} -> Trace");
+            _animator.SetTrigger("IdleToMove");
             _state = ZombieState.Trace;
         }
     }
@@ -162,9 +164,6 @@ public class Zombie : MonoBehaviour, IDamageable
     // 추격: 플레이어를 쫓아간다.
     private void Trace()
     {
-        // Todo. Run 애니메이션 실행
-
-        
         // 처음 자리에서 너무 멀어지면 돌아간다.
         if (Vector3.Distance(transform.position, _startPosition) > _combackDistance)
         {
@@ -178,6 +177,7 @@ public class Zombie : MonoBehaviour, IDamageable
         {
             _attackTimer = 0f;
             Debug.Log($"{_state} -> Attack");
+            _animator.SetTrigger("MoveToAttackDelay");
             _state = ZombieState.Attack;
             return;
         }
@@ -195,6 +195,7 @@ public class Zombie : MonoBehaviour, IDamageable
         if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             Debug.Log($"{_state} -> Idle");
+            _animator.SetTrigger("MoveToIdle");
             _state = ZombieState.Idle;
             return;
         }
@@ -212,14 +213,16 @@ public class Zombie : MonoBehaviour, IDamageable
         if (distance > _attackRange)
         {
             Debug.Log($"{_state} -> Trace");
+            _animator.SetTrigger("AttackMove");
             _state = ZombieState.Trace;
+            return;
         }
-        
+
         _attackTimer += Time.deltaTime;
         if (_attackTimer >= _attackInterval)
         {
-            // Todo. 공격 애니메이션 실행
-            
+            _animator.SetTrigger("StartAttack");
+
             DamageInfo damageInfo = new DamageInfo()
             {
                 Value = _attackDamaga,
