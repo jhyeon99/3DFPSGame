@@ -49,6 +49,9 @@ public class Zombie : MonoBehaviour, IDamageable
     // 체력이 변할 때 구독자(체력바 등)에게 알린다.
     public event Action OnHealthChanged;
 
+    // 좀비가 죽을 때 구독자(스포너 등)에게 알린다.
+    public event Action<Zombie> OnDied;
+
     private ZombieState _state = ZombieState.Idle;
 
     private void Awake()
@@ -124,6 +127,7 @@ public class Zombie : MonoBehaviour, IDamageable
         {
             Debug.Log($"{_state} -> Death");
             _state = ZombieState.Death;
+            OnDied?.Invoke(this);
             StartCoroutine(Death_Coroutine());
         }
        
@@ -132,10 +136,12 @@ public class Zombie : MonoBehaviour, IDamageable
     private IEnumerator Hit_Coroutine()
     {
         StopAgent();
-        yield return new WaitForSeconds(0.3f);  // 잠깐 멈칫한다!
-
-        // 맞았으니 쫒아온다.
         Debug.Log($"{_state} -> Trace");
+        _animator.SetTrigger("Hit");
+        
+        yield return new WaitForSeconds(0.5f);  // 잠깐 멈칫한다!
+ 
+        // 맞았으니 쫒아온다.
         _state = ZombieState.Trace;
     }
     

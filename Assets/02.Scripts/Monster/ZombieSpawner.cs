@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,6 +16,12 @@ public class ZombieSpawner : MonoBehaviour
     private readonly List<Zombie> _spawned = new List<Zombie>();
     private float _timer = 0f;
 
+    public int AliveCount => _spawned.Count;
+    public int MaxAlive => _maxAlive;
+
+    // 살아 있는 좀비 수가 변할 때 구독자(UI 등)에게 알린다.
+    public event Action OnAliveCountChanged;
+
     private void Update()
     {
         if (GameManager.Instance.State != GameState.Playing) return;
@@ -22,8 +29,6 @@ public class ZombieSpawner : MonoBehaviour
         _timer += Time.deltaTime;
         if (_timer < _spawnInterval) return;
 
-        // 죽어서 파괴된 좀비는 목록에서 정리한다.
-        _spawned.RemoveAll(zombie => zombie == null);
         if (_spawned.Count >= _maxAlive) return;
 
         _timer = 0f;
@@ -46,7 +51,16 @@ public class ZombieSpawner : MonoBehaviour
         }
 
         Zombie zombie = Instantiate(_zombiePrefab, position, Quaternion.identity);
+        zombie.OnDied += HandleZombieDied;
         _spawned.Add(zombie);
+        OnAliveCountChanged?.Invoke();
+    }
+
+    private void HandleZombieDied(Zombie zombie)
+    {
+        zombie.OnDied -= HandleZombieDied;
+        _spawned.Remove(zombie);
+        OnAliveCountChanged?.Invoke();
     }
 
     private Vector3 GetSpawnPosition()
@@ -56,6 +70,6 @@ public class ZombieSpawner : MonoBehaviour
             return transform.position;
         }
 
-        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].position;
+        return _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)].position;
     }
 }
