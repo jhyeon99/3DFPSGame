@@ -335,6 +335,31 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1107 &8132679979570822841
+AnimatorStateMachine:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Attack Process
+  m_ChildStates:
+  - serializedVersion: 1
+    m_State: {fileID: 1596027332886758786}
+    m_Position: {x: 260, y: 110, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -5910669161850658178}
+    m_Position: {x: 560, y: 110, z: 0}
+  m_ChildStateMachines: []
+  m_AnyStateTransitions: []
+  m_EntryTransitions: []
+  m_StateMachineTransitions: {}
+  m_StateMachineBehaviours: []
+  m_AnyStatePosition: {x: 50, y: 20, z: 0}
+  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_ExitPosition: {x: 800, y: 120, z: 0}
+  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
+  m_DefaultState: {fileID: 1596027332886758786}
 --- !u!1107 &8338360761272702865
 AnimatorStateMachine:
   serializedVersion: 6
@@ -350,13 +375,10 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 6257487208019821028}
     m_Position: {x: 260, y: 180, z: 0}
+  m_ChildStateMachines:
   - serializedVersion: 1
-    m_State: {fileID: 1596027332886758786}
-    m_Position: {x: 490, y: 110, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -5910669161850658178}
-    m_Position: {x: 260, y: 110, z: 0}
-  m_ChildStateMachines: []
+    m_StateMachine: {fileID: 8132679979570822841}
+    m_Position: {x: 380, y: 0, z: 0}
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
