@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,14 +44,19 @@ public class Zombie : MonoBehaviour, IDamageable
 
     public float MaxHealth => _maxHealth;
     public float Health => _health;
-    
-    
+
+    // 체력이 변할 때 구독자(체력바 등)에게 알린다.
+    public event Action OnHealthChanged;
+
     private ZombieState _state = ZombieState.Idle;
+
+    private void Awake()
+    {
+        _health = _maxHealth;
+    }
 
     private void Start()
     {
-        _health = _maxHealth;
-        
         _startPosition = transform.position;
      
         // 길을 찾아 걷게 해주는 컴포넌트 NavMeshAgent를 찾아서 참조
@@ -95,6 +101,7 @@ public class Zombie : MonoBehaviour, IDamageable
         }
         
         _health -= damageInfo.Value;
+        OnHealthChanged?.Invoke();
 
         StopAllCoroutines();
         
