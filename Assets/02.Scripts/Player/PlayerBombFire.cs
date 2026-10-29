@@ -15,6 +15,7 @@ public class PlayerBombFire : MonoBehaviour
     private int _remainBomb;
 
     private Player _player;
+    private PlayerThrowArm _throwArm;
 
     public int RemainBomb => _remainBomb;
 
@@ -23,6 +24,13 @@ public class PlayerBombFire : MonoBehaviour
     private void Awake()
     {
         _remainBomb = _startBomb;
+
+        // 던지는 오른팔 모션. 없으면 만들어 붙인다.
+        _throwArm = GetComponent<PlayerThrowArm>();
+        if (_throwArm == null)
+        {
+            _throwArm = gameObject.AddComponent<PlayerThrowArm>();
+        }
     }
 
     private void Start()
@@ -36,12 +44,21 @@ public class PlayerBombFire : MonoBehaviour
    private void Update()
    {
        if (GameManager.Instance.State != GameState.Playing) return;
-       if (_player.WeaponMode != WeaponMode.Normal) return;
-        
+       if (_player.WeaponMode != WeaponMode.Normal)
+       {
+           // 팔을 젖힌 채로 무기를 바꾸면 준비 동작을 취소한다.
+           _throwArm.Cancel();
+           return;
+       }
+
         // 1. 마우스 오른쪽 버튼 입력 받기
         if (Input.GetButtonDown("Fire2"))
         {
             _throwPower = _defaultThrowPower;
+            if (_remainBomb > 0)
+            {
+                _throwArm.BeginWindup();
+            }
         }
         else if (Input.GetButton("Fire2"))
         {
@@ -56,12 +73,21 @@ public class PlayerBombFire : MonoBehaviour
 
     private void Fire()
     {
-        if (_remainBomb <= 0) return;
+        if (_remainBomb <= 0)
+        {
+            _throwArm.Cancel();
+            return;
+        }
 
         // 2. 발사 위치에서 풀에 있는 수류탄 꺼내기 (풀이 가득 차면 null)
         Bomb bomb = ProjectilePool.Instance.Get(_bombPrefab, _firePoint.position, Quaternion.identity);
-        if (bomb == null) return;
+        if (bomb == null)
+        {
+            _throwArm.Cancel();
+            return;
+        }
 
+        _throwArm.Throw();
         _remainBomb--;
         OnBombChanged?.Invoke(_remainBomb);
 
