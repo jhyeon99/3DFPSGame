@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, IDamageable
 
     // Action 자료형: 함수(들)를 저장할 수 있다.
     public event Action OnDamaged;
+    public event Action<WeaponMode> OnWeaponChanged;
 
     private void Awake()
     {
@@ -27,10 +28,12 @@ public class Player : MonoBehaviour, IDamageable
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _weaponMode = WeaponMode.Normal;
+            OnWeaponChanged?.Invoke(WeaponMode.Normal);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             _weaponMode = WeaponMode.Sniper;
+            OnWeaponChanged?.Invoke(WeaponMode.Sniper);
         }
     }
 

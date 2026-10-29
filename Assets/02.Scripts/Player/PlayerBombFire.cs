@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // 마우스 오른쪽 버튼을 누르면 시선이 바라보는 방향으로 수류탄을 던지고 싶다.
@@ -9,11 +10,15 @@ public class PlayerBombFire : MonoBehaviour
     [SerializeField] private float _maxThrowPower;
     [SerializeField] private float _chargeThrowPowerPerSec;
 
-    [SerializeField] private float _startBomb;
+    [SerializeField] private int _startBomb;
     private float _throwPower;
-    private float _remainBomb;
+    private int _remainBomb;
 
     private Player _player;
+
+    public int RemainBomb => _remainBomb;
+
+    public event Action<int> OnBombChanged;
 
     private void Awake()
     {
@@ -44,12 +49,12 @@ public class PlayerBombFire : MonoBehaviour
         }
         else if (Input.GetButtonUp("Fire2"))
         {
-            Shoot();
+            Fire();
         }
         
     }
 
-    private void Shoot()
+    private void Fire()
     {
         if (_remainBomb <= 0) return;
 
@@ -58,6 +63,7 @@ public class PlayerBombFire : MonoBehaviour
         if (bomb == null) return;
 
         _remainBomb--;
+        OnBombChanged?.Invoke(_remainBomb);
 
         // 3. 꺼낸 수류탄을 시선 방향으로 던지기
         bomb.Rigidbody.AddForce(Camera.main.transform.forward * _throwPower, ForceMode.Impulse);

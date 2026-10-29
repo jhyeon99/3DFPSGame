@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,12 +12,17 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _fireInterval = 0.1f;
-    [SerializeField] private float _maxBullet = 50f;
+    [SerializeField] private int _maxBullet = 50;
     [SerializeField] private float _reloadingTime = 3f;
     
     private float _fireTimer = 0f;
-    private float _currentBullet = 0f;
+    private int _currentBullet = 0;
     private Coroutine _reloadCoroutine;
+
+    public int CurrentBullet => _currentBullet;
+    public int MaxBullet => _maxBullet;
+
+    public event Action<int, int> OnBulletChanged;
 
     private void Awake()
     {
@@ -41,8 +47,9 @@ public class PlayerGunFire : MonoBehaviour
         if (isMouseVisible == false && Input.GetButton("Fire1") && _fireTimer <= 0f && _currentBullet > 0)
         {
             _currentBullet--;
+            OnBulletChanged?.Invoke(_currentBullet, _maxBullet);
             _fireTimer = _fireInterval;
-            Shoot();
+            Fire();
             
             // 이 방식은 이 모노비헤이비어가 등록한 모든 코루틴을 실행 취소 
             //StopAllCoroutines();
@@ -68,17 +75,18 @@ public class PlayerGunFire : MonoBehaviour
         yield return new WaitForSeconds(_reloadingTime);
         
         _currentBullet = _maxBullet;
-        
+        OnBulletChanged?.Invoke(_currentBullet, _maxBullet);
+
         Debug.Log("재장전 종료");
         _reloadCoroutine = null;
     }
 
-    private void Shoot()
+    private void Fire()
     {   
         // Ray: 레이저(시작 위치, 날아갈 방향)
         // Physics.RayCast: 레이저를 발사
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
-        
+
         // 2. 레이(광선)를 생성하고 발사될 위치와 진행 방향 설정하기
         Transform cameraTransform = Camera.main.transform;
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
