@@ -23,11 +23,13 @@ public class PlayerMove : MonoBehaviour
     public float Stamina => _stamina;
     
     private CharacterController _characterController;
+    private Animator _animator;
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _stamina = MaxStamina;
+        _animator = GetComponentInChildren<Animator>();
     }
     
     private void Update()
@@ -41,6 +43,7 @@ public class PlayerMove : MonoBehaviour
         // 2. 키보드 입력에 따라 방향을 구한다.
         Vector3 direction = new Vector3(h, 0, v);
         direction.Normalize(); // 대각선 이동시 속도 유지
+        _animator.SetFloat("MoveMotion", direction.magnitude);
         direction = transform.TransformDirection(direction);
         // 로컬 좌표계: 한 대상을 중심
         // 월드 좌표계: 세상을 중심
