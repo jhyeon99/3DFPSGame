@@ -17,10 +17,19 @@ public class PlayerGunFire : MonoBehaviour
 
     [SerializeField] private GameObject[] _muzzleFlashes;
     [SerializeField] private float _flashTime;
-    
+
+    [Header("궤적")]
+    [SerializeField] private Transform _muzzle; // 비워 두면 카메라 기준 오프셋에서 시작
+    [SerializeField] private float _tracerDuration = 0.08f;
+    [SerializeField] private float _tracerWidth = 0.03f;
+    [SerializeField] private Color _tracerColor = new Color(1f, 0.85f, 0.4f, 1f);
+    [SerializeField] private Vector3 _tracerCameraOffset = new Vector3(0.2f, -0.15f, 0.5f);
+
     private float _fireTimer = 0f;
     private int _currentBullet = 0;
     private Coroutine _reloadCoroutine;
+    private Coroutine _tracerCoroutine;
+    private LineRenderer _tracerLine;
 
     public int CurrentBullet => _currentBullet;
     public int MaxBullet => _maxBullet;
@@ -30,6 +39,26 @@ public class PlayerGunFire : MonoBehaviour
     private void Awake()
     {
         _currentBullet = _maxBullet;
+
+        CreateTracerLine();
+    }
+
+    // 궤적용 라인렌더러를 코드로 만들어 재사용한다.
+    private void CreateTracerLine()
+    {
+        GameObject tracerObject = new GameObject("TracerLine");
+        tracerObject.transform.SetParent(transform);
+
+        _tracerLine = tracerObject.AddComponent<LineRenderer>();
+        _tracerLine.positionCount = 2;
+        _tracerLine.useWorldSpace = true;
+        _tracerLine.widthMultiplier = _tracerWidth;
+        _tracerLine.material = new Material(Shader.Find("Sprites/Default"));
+        _tracerLine.startColor = _tracerColor;
+        _tracerLine.endColor = _tracerColor;
+        _tracerLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        _tracerLine.receiveShadows = false;
+        _tracerLine.enabled = false;
     }
 
     private void Start()
@@ -101,6 +130,11 @@ public class PlayerGunFire : MonoBehaviour
         
         // 4. 레이를 발사하고, 만일 부딪힌 물체가 있다면 이펙트 표시하기
         bool isHit = Physics.Raycast(ray, out hitInfo, _range);
+
+        // 맞았으면 맞은 지점까지, 빗나갔으면 사거리 끝까지 궤적을 그린다.
+        Vector3 tracerEnd = isHit ? hitInfo.point : ray.origin + ray.direction * _range;
+        ShowTracer(tracerEnd);
+
         if (isHit)
         {
             // Debug.Log($"{hitInfo.collider.name}이 총알에 맞았다, 데미지: {_damage}");
@@ -122,6 +156,40 @@ public class PlayerGunFire : MonoBehaviour
             hitInfo.collider.GetComponent<Box>()?.TakeDamage(_damage);
             */
         }
+    }
+
+    private void ShowTracer(Vector3 endPoint)
+    {
+        // 연사 시 이전 궤적이 남아 있으면 끊고 새로 그린다.
+        if (_tracerCoroutine != null)
+        {
+            StopCoroutine(_tracerCoroutine);
+        }
+
+        Vector3 startPoint = _muzzle != null
+            ? _muzzle.position
+            : Camera.main.transform.TransformPoint(_tracerCameraOffset);
+        _tracerCoroutine = StartCoroutine(Tracer_Coroutine(startPoint, endPoint));
+    }
+
+    // 궤적을 그린 뒤 굵기를 줄여가며 자연스럽게 사라지게 한다.
+    private IEnumerator Tracer_Coroutine(Vector3 startPoint, Vector3 endPoint)
+    {
+        _tracerLine.SetPosition(0, startPoint);
+        _tracerLine.SetPosition(1, endPoint);
+        _tracerLine.widthMultiplier = _tracerWidth;
+        _tracerLine.enabled = true;
+
+        float elapsed = 0f;
+        while (elapsed < _tracerDuration)
+        {
+            elapsed += Time.deltaTime;
+            _tracerLine.widthMultiplier = Mathf.Lerp(_tracerWidth, 0f, elapsed / _tracerDuration);
+            yield return null;
+        }
+
+        _tracerLine.enabled = false;
+        _tracerCoroutine = null;
     }
 
     private IEnumerator MuzzleFlash_Coroutine()

@@ -670,6 +670,9 @@ MonoBehaviour:
   - {fileID: 1743618935}
   - {fileID: 439342569}
   _flashTime: 0.03
+  _tracerLine: {fileID: 0}
+  _muzzle: {fileID: 913183836}
+  _tracerDuration: 0.08
 --- !u!114 &210088788
 MonoBehaviour:
   m_ObjectHideFlags: 0
