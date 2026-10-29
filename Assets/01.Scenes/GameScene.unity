@@ -492,6 +492,7 @@ GameObject:
   - component: {fileID: 210088787}
   - component: {fileID: 210088788}
   - component: {fileID: 210088789}
+  - component: {fileID: 210088790}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -624,6 +625,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   _maxHealth: 100
+--- !u!114 &210088790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210088782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ffe6b45c2482544bf3a261760a776f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerZoom
 --- !u!1 &212790168
 GameObject:
   m_ObjectHideFlags: 0
@@ -3947,7 +3960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_PlayerStats
   _hpSlider: {fileID: 1678019806}
   _staminaSlider: {fileID: 491803823}
-  _playerHealth: {fileID: 210088789}
+  player: {fileID: 210088789}
   _playerMove: {fileID: 210088784}
 --- !u!1 &1597242633
 GameObject:

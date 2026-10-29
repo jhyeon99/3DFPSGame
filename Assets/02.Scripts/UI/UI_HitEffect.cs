@@ -18,10 +18,10 @@ public class UI_HitEffect : MonoBehaviour
 
     private void Start()
     {
-        PlayerHealth playerHealth = GameObject.FindAnyObjectByType<PlayerHealth>();
-        if (playerHealth != null)
+        Player player = GameObject.FindAnyObjectByType<Player>();
+        if (player != null)
         {
-            playerHealth.OnDamaged += OnPlayerDamaged;
+            player.OnDamaged += OnPlayerDamaged;
         }
     }
 

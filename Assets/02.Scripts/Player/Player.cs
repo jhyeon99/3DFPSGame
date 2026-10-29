@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField] private float _maxHealth = 100f;
     private float _health;
@@ -9,12 +9,29 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public float MaxHealth => _maxHealth;
     public float Health => _health;
 
+    private WeaponMode _weaponMode = WeaponMode.Normal;
+    public WeaponMode WeaponMode => _weaponMode;
+
     // Action 자료형: 함수(들)를 저장할 수 있다.
     public event Action OnDamaged;
 
     private void Awake()
     {
         _health = _maxHealth;
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.State != GameState.Playing) return;
+        
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _weaponMode = WeaponMode.Normal;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _weaponMode = WeaponMode.Sniper;
+        }
     }
 
     public void TakeDamage(DamageInfo damageInfo)

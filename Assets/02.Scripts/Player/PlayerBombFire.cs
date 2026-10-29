@@ -13,6 +13,8 @@ public class PlayerBombFire : MonoBehaviour
     private float _throwPower;
     private float _remainBomb;
 
+    private Player _player;
+
     private void Awake()
     {
         _remainBomb = _startBomb;
@@ -20,12 +22,17 @@ public class PlayerBombFire : MonoBehaviour
 
     private void Start()
     {
+        _player = GetComponent<Player>();
+        
         // 폭탄 풀을 미리 만들어 둔다 (ProjectilePool 인스펙터에서 미리 만들기 개수 설정 가능)
         ProjectilePool.Instance.Register(_bombPrefab);
     }
     
    private void Update()
-    {
+   {
+       if (GameManager.Instance.State != GameState.Playing) return;
+       if (_player.WeaponMode != WeaponMode.Normal) return;
+        
         // 1. 마우스 오른쪽 버튼 입력 받기
         if (Input.GetButtonDown("Fire2"))
         {
