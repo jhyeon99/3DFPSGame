@@ -194,16 +194,10 @@ public static class AttachSword
 
     private static void SetupSwing(GameObject player, Transform upperArm, Transform foreArm)
     {
-        var swing = player.GetComponent<PlayerSwordSwing>();
-        if (swing == null)
+        if (player.GetComponent<PlayerSwordSwing>() == null)
         {
-            swing = Undo.AddComponent<PlayerSwordSwing>(player);
+            Undo.AddComponent<PlayerSwordSwing>(player);
         }
-
-        var so = new SerializedObject(swing);
-        so.FindProperty("_upperArm").objectReferenceValue = upperArm;
-        so.FindProperty("_foreArm").objectReferenceValue = foreArm;
-        so.ApplyModifiedProperties();
     }
 
     private static Transform FindDeep(Transform parent, string name)
