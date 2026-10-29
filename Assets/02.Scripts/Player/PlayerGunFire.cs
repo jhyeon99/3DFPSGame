@@ -14,6 +14,9 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private float _fireInterval = 0.1f;
     [SerializeField] private int _maxBullet = 50;
     [SerializeField] private float _reloadingTime = 3f;
+
+    [SerializeField] private GameObject[] _muzzleFlashes;
+    [SerializeField] private float _flashTime;
     
     private float _fireTimer = 0f;
     private int _currentBullet = 0;
@@ -83,6 +86,8 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Fire()
     {   
+        StartCoroutine(MuzzleFlash_Coroutine());
+        
         // Ray: 레이저(시작 위치, 날아갈 방향)
         // Physics.RayCast: 레이저를 발사
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
@@ -117,5 +122,16 @@ public class PlayerGunFire : MonoBehaviour
             hitInfo.collider.GetComponent<Box>()?.TakeDamage(_damage);
             */
         }
+    }
+
+    private IEnumerator MuzzleFlash_Coroutine()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, _muzzleFlashes.Length);
+        GameObject flash = _muzzleFlashes[randomIndex];
+        flash.SetActive(true);
+        
+        yield return new WaitForSeconds(_flashTime);
+        
+        flash.SetActive(false);
     }
 }
