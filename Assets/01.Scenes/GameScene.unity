@@ -668,6 +668,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeAttack
   _meleeCollider: {fileID: 1733868162}
+  _meleeHitMode: 1
+  _range: 2
+  _angle: 90
+  _targetMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &212790168
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,7 +1294,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 7159
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1335,7 +1341,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 7159
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
@@ -3947,7 +3953,7 @@ GameObject:
   - component: {fileID: 979029609}
   - component: {fileID: 979029608}
   - component: {fileID: 979029607}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

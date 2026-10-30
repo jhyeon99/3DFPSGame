@@ -1,4 +1,11 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+
+public enum MeleeHitMode
+{
+    Collider,
+    Fan
+}
 
 public class PlayerMeleeAttack : MonoBehaviour
 {
@@ -6,7 +13,14 @@ public class PlayerMeleeAttack : MonoBehaviour
     private Animator _animator;
     private int _meleeLayerIndex;
     [SerializeField] private Collider _meleeCollider;
+    [SerializeField] private MeleeHitMode _meleeHitMode;
 
+    [Header("부채꼴")]
+    [SerializeField] private float _range = 2f;
+    [SerializeField] private float _angle = 90f;
+    [SerializeField] private LayerMask _targetMask;
+    
+    
     private void Awake()
     {
         _player = GetComponent<Player>();
@@ -16,9 +30,49 @@ public class PlayerMeleeAttack : MonoBehaviour
         // 타격 구간(애니메이션 이벤트)에서만 켠다.
         DeactivateCollider();
     }
+
+    public void FanAttack()
+    {
+        if (_meleeHitMode != MeleeHitMode.Fan) return;
+
+        Vector3 origin = _player.transform.position;
+        
+        Collider[] colliders = Physics.OverlapSphere(origin, _range, _targetMask);
+        foreach (Collider col in colliders)
+        {
+            Vector3 hitPoint = col.ClosestPoint(origin);
+            
+            Vector3 direction = hitPoint - origin;
+            direction.y = 0f;
+            float angle = Vector3.Angle(_player.transform.forward, direction);
+            if (angle > _angle / 2f) continue;
+
+            if (Physics.Linecast(origin, hitPoint, LayerMask.NameToLayer("Wall"))) continue;
+            
+            if (col.TryGetComponent(out IDamageable damageable))
+            {
+                DamageInfo damageInfo = new DamageInfo();
+                damageInfo.Value = 25f;
+                damageInfo.HitPoint = col.ClosestPoint(origin);
+                damageInfo.HitNormal = (origin - col.ClosestPoint(origin)).normalized;
+                damageable.TakeDamage(damageInfo);
+            }
+        }
+    }
     
-    public void ActivateCollider() => _meleeCollider.enabled = true;
-    public void DeactivateCollider() => _meleeCollider.enabled = false;
+    public void ActivateCollider()
+    {
+        if (_meleeHitMode != MeleeHitMode.Collider) return;
+        
+        _meleeCollider.enabled = true;   
+    }
+
+    public void DeactivateCollider()
+    {
+        if (_meleeHitMode != MeleeHitMode.Collider) return;
+        
+        _meleeCollider.enabled = false;
+    }
 
     private void Update()
     {
