@@ -27,8 +27,9 @@ public class PlayerMeleeAttack : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _meleeLayerIndex = _animator.GetLayerIndex("Melee Layer");
 
-        // 타격 구간(애니메이션 이벤트)에서만 켠다.
-        DeactivateCollider();
+        // 검 콜라이더는 타격 구간(Collider 모드의 애니메이션 이벤트)에서만 켠다.
+        // 히트 모드와 상관없이 평소에는 꺼 둔다. (Fan 모드에서 켜진 채로 남아 있으면 검이 계속 피해를 준다.)
+        _meleeCollider.enabled = false;
     }
 
     public void FanAttack()

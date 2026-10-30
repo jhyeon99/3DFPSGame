@@ -13,6 +13,9 @@ public class Sword : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
+        // 자기 자신(플레이어 몸)은 때리지 않는다.
+        if (other.transform.IsChildOf(_player.transform)) return;
+
         if (other.TryGetComponent<IDamageable>(out IDamageable _damageable))
         {
             DamageInfo damageInfo = new DamageInfo();
