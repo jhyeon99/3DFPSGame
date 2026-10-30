@@ -80,7 +80,6 @@ public static class AttachSword
             Object.DestroyImmediate(c);
         }
         ApplyMaterial(sword);
-        SetupSwing(player, upperArm, foreArm);
 
         EditorSceneManager.MarkSceneDirty(player.scene);
         Debug.Log($"[AttachSword] 완료. 검 길이 {length * scale:F2}m, 스케일 {scale:F3}");
@@ -189,14 +188,6 @@ public static class AttachSword
         foreach (Renderer r in sword.GetComponentsInChildren<Renderer>())
         {
             r.sharedMaterial = mat;
-        }
-    }
-
-    private static void SetupSwing(GameObject player, Transform upperArm, Transform foreArm)
-    {
-        if (player.GetComponent<PlayerSwordSwing>() == null)
-        {
-            Undo.AddComponent<PlayerSwordSwing>(player);
         }
     }
 

@@ -27,14 +27,22 @@ public class Player : MonoBehaviour, IDamageable
         
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _weaponMode = WeaponMode.Normal;
-            OnWeaponChanged?.Invoke(WeaponMode.Normal);
+            ChangeWeaponMode(WeaponMode.Normal);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _weaponMode = WeaponMode.Sniper;
-            OnWeaponChanged?.Invoke(WeaponMode.Sniper);
+            ChangeWeaponMode(WeaponMode.Sniper);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ChangeWeaponMode(WeaponMode.Melee);
+        }
+    }
+
+    private void ChangeWeaponMode(WeaponMode weaponMode)
+    {
+        _weaponMode = weaponMode;
+        OnWeaponChanged?.Invoke(weaponMode);
     }
 
     public void TakeDamage(DamageInfo damageInfo)

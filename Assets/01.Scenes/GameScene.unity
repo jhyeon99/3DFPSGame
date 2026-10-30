@@ -732,11 +732,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 210088782}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ed688fb24a9d5b46aaad350c77db850, type: 3}
+  m_Script: {fileID: 11500000, guid: 931c8bd34f56dd345ae24f43dcdc117e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerSwordSwing
-  _swingKey: 102
-  _comboInputStartRatio: 0.5
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeAttack
 --- !u!1 &212790168
 GameObject:
   m_ObjectHideFlags: 0
