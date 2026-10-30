@@ -24,6 +24,8 @@ public enum ZombieState
 [RequireComponent(typeof(NavMeshAgent))]
 public class Zombie : MonoBehaviour, IDamageable
 {
+    private const float ArriveTolerance = 0.2f;     // 복귀 지점 도착으로 인정하는 여유 거리
+
     [Header("스탯")] 
     [SerializeField] private float _detectDistance  = 8;    // 플레이어를 발견하는 거리
     [SerializeField] private float _combackDistance = 15;   // 처음 자리에서 이만큼 멀어지면 돌아가는 거리
@@ -185,6 +187,7 @@ public class Zombie : MonoBehaviour, IDamageable
         if (Vector3.Distance(transform.position, _startPosition) > _combackDistance)
         {
             Debug.Log($"{_state} -> Comeback");
+            _agent.SetDestination(_startPosition);
             _state = ZombieState.Comeback;
             return;
         }
@@ -210,16 +213,17 @@ public class Zombie : MonoBehaviour, IDamageable
     {
         if (TryStartJump()) return;
 
+        // 경로 계산이 끝나기 전에는 remainingDistance가 신뢰할 수 없으므로 기다린다.
+        if (_agent.pathPending) return;
+
         // 처음 자리에 도착하면 Idle
-        if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
+        // (pathStatus는 "경로가 유효한지"만 알려주므로 도착 판정에 쓰면 안 된다.)
+        if (_agent.remainingDistance <= _agent.stoppingDistance + ArriveTolerance)
         {
             Debug.Log($"{_state} -> Idle");
             _animator.SetTrigger("MoveToIdle");
             _state = ZombieState.Idle;
-            return;
         }
-        
-        _agent.SetDestination(_startPosition);
     }
 
     // 공격: 일정 시간마다 플레이어를 때린다.
