@@ -1,0 +1,16 @@
+{
+  "label": "s2b_trim",
+  "frames": 900,
+  "avgFps": 426.7,
+  "avgFrameMs": 2.34,
+  "p95FrameMs": 2.97,
+  "maxFrameMs": 11.14,
+  "batches": 149,
+  "setPassCalls": 63,
+  "drawCalls": 440,
+  "triangles": 287570,
+  "vertices": 295281,
+  "shadowCasters": 342,
+  "gcAllocBytesPerFrame": 34979,
+  "totalUsedMemoryMB": 2155.2
+}

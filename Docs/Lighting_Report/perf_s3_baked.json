@@ -1,0 +1,16 @@
+{
+  "label": "s3_baked",
+  "frames": 900,
+  "avgFps": 470.8,
+  "avgFrameMs": 2.12,
+  "p95FrameMs": 2.67,
+  "maxFrameMs": 4.88,
+  "batches": 162,
+  "setPassCalls": 57,
+  "drawCalls": 294,
+  "triangles": 244480,
+  "vertices": 215247,
+  "shadowCasters": 2,
+  "gcAllocBytesPerFrame": 26361,
+  "totalUsedMemoryMB": 2194.9
+}

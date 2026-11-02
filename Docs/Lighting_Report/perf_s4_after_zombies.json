@@ -1,0 +1,16 @@
+{
+  "label": "s4_after_zombies",
+  "frames": 900,
+  "avgFps": 313.6,
+  "avgFrameMs": 3.19,
+  "p95FrameMs": 3.90,
+  "maxFrameMs": 5.57,
+  "batches": 281,
+  "setPassCalls": 63,
+  "drawCalls": 392,
+  "triangles": 282998,
+  "vertices": 240739,
+  "shadowCasters": 76,
+  "gcAllocBytesPerFrame": 38065,
+  "totalUsedMemoryMB": 2194.6
+}

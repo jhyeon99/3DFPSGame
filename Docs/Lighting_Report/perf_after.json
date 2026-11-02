@@ -1,0 +1,16 @@
+{
+  "label": "after",
+  "frames": 900,
+  "avgFps": 209.4,
+  "avgFrameMs": 4.78,
+  "p95FrameMs": 6.15,
+  "maxFrameMs": 10.14,
+  "batches": 148,
+  "setPassCalls": 63,
+  "drawCalls": 426,
+  "triangles": 286997,
+  "vertices": 294014,
+  "shadowCasters": 335,
+  "gcAllocBytesPerFrame": 49820,
+  "totalUsedMemoryMB": 1771.4
+}

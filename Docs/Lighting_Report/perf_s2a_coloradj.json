@@ -1,0 +1,16 @@
+{
+  "label": "s2a_coloradj",
+  "frames": 900,
+  "avgFps": 417.3,
+  "avgFrameMs": 2.40,
+  "p95FrameMs": 3.09,
+  "maxFrameMs": 6.65,
+  "batches": 149,
+  "setPassCalls": 63,
+  "drawCalls": 435,
+  "triangles": 287620,
+  "vertices": 294970,
+  "shadowCasters": 339,
+  "gcAllocBytesPerFrame": 28993,
+  "totalUsedMemoryMB": 2231.9
+}

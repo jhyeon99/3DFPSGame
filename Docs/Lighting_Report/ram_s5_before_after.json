@@ -1,0 +1,5 @@
+{
+  "note": "Play 모드 120프레임 후 ProfilerRecorder 값, 좀비 0마리, Profiler 기록 꺼짐",
+  "before": { "textureMemoryMB": 328.0, "meshMemoryMB": 27.9, "materialCount": 218, "totalUsedMemoryMB": 2275.1, "totalReservedMemoryMB": 3266.7, "gcUsedMemoryMB": 789.2, "sceneTextureDependenciesMB": 113.7 },
+  "after":  { "textureMemoryMB": 297.1, "meshMemoryMB": 27.9, "materialCount": 216, "totalUsedMemoryMB": 2238.7, "totalReservedMemoryMB": 3249.9, "gcUsedMemoryMB": 786.7, "sceneTextureDependenciesMB": 81.7 }
+}

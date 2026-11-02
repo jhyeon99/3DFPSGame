@@ -1,0 +1,16 @@
+{
+  "label": "s1_base",
+  "frames": 900,
+  "avgFps": 409.7,
+  "avgFrameMs": 2.44,
+  "p95FrameMs": 3.10,
+  "maxFrameMs": 6.94,
+  "batches": 148,
+  "setPassCalls": 63,
+  "drawCalls": 430,
+  "triangles": 287129,
+  "vertices": 294422,
+  "shadowCasters": 337,
+  "gcAllocBytesPerFrame": 34177,
+  "totalUsedMemoryMB": 2238.9
+}

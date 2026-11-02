@@ -1,0 +1,16 @@
+{
+  "label": "s4_before_zombies",
+  "frames": 900,
+  "avgFps": 313.5,
+  "avgFrameMs": 3.19,
+  "p95FrameMs": 3.89,
+  "maxFrameMs": 5.31,
+  "batches": 283,
+  "setPassCalls": 62,
+  "drawCalls": 392,
+  "triangles": 282560,
+  "vertices": 239414,
+  "shadowCasters": 79,
+  "gcAllocBytesPerFrame": 38688,
+  "totalUsedMemoryMB": 2146.1
+}

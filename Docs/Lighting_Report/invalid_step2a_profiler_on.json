@@ -1,0 +1,16 @@
+{
+  "label": "step2a_coloradj",
+  "frames": 900,
+  "avgFps": 303.8,
+  "avgFrameMs": 3.29,
+  "p95FrameMs": 4.35,
+  "maxFrameMs": 28.60,
+  "batches": 147,
+  "setPassCalls": 63,
+  "drawCalls": 420,
+  "triangles": 286850,
+  "vertices": 293502,
+  "shadowCasters": 332,
+  "gcAllocBytesPerFrame": 39603,
+  "totalUsedMemoryMB": 5701.0
+}
