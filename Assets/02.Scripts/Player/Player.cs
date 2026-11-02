@@ -53,10 +53,10 @@ public class Player : MonoBehaviour, IDamageable
 
         OnDamaged?.Invoke();
         
-        Debug.Log($"플레이어가 맞았다. 데미지 {damageInfo.Value}, 남은 체력 {_health}");
+        GameLogger.Log($"플레이어가 맞았다. 데미지 {damageInfo.Value}, 남은 체력 {_health}");
         if (_health <= 0f)
         {
-            Debug.Log("플레이어가 쓰러졌다!");
+            GameLogger.Log("플레이어가 쓰러졌다!");
             GameManager.Instance.GameOver();
         }
     }

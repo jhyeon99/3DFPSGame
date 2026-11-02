@@ -30,6 +30,7 @@ public class PlayerGunFire : MonoBehaviour
     private Coroutine _reloadCoroutine;
     private Coroutine _tracerCoroutine;
     private LineRenderer _tracerLine;
+    private Transform _cameraTransform;
 
     public int CurrentBullet => _currentBullet;
     public int MaxBullet => _maxBullet;
@@ -39,6 +40,7 @@ public class PlayerGunFire : MonoBehaviour
     private void Awake()
     {
         _currentBullet = _maxBullet;
+        _cameraTransform = Camera.main.transform;
 
         CreateTracerLine();
     }
@@ -88,7 +90,7 @@ public class PlayerGunFire : MonoBehaviour
             if (_reloadCoroutine != null)
             {
                 StopCoroutine(_reloadCoroutine);
-                Debug.Log("재장전 취소");
+                GameLogger.Log("재장전 취소");
                 _reloadCoroutine = null;
             }
         }
@@ -102,14 +104,14 @@ public class PlayerGunFire : MonoBehaviour
 
     private IEnumerator Reloading_Coroutine()
     {
-        Debug.Log("재장전 시작");
+        GameLogger.Log("재장전 시작");
         
         yield return new WaitForSeconds(_reloadingTime);
         
         _currentBullet = _maxBullet;
         OnBulletChanged?.Invoke(_currentBullet, _maxBullet);
 
-        Debug.Log("재장전 종료");
+        GameLogger.Log("재장전 종료");
         _reloadCoroutine = null;
     }
 
@@ -122,8 +124,7 @@ public class PlayerGunFire : MonoBehaviour
         // RayCastHit: 레이저가 물체와 부딪히면 그 물체를 
 
         // 2. 레이(광선)를 생성하고 발사될 위치와 진행 방향 설정하기
-        Transform cameraTransform = Camera.main.transform;
-        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        Ray ray = new Ray(_cameraTransform.position, _cameraTransform.forward);
         
         // 3. 레이가 부딪힌 대상의 정보를 저장할 변수 생성하기
         RaycastHit hitInfo = new RaycastHit();
@@ -138,11 +139,9 @@ public class PlayerGunFire : MonoBehaviour
         if (isHit)
         {
             // Debug.Log($"{hitInfo.collider.name}이 총알에 맞았다, 데미지: {_damage}");
-            ParticleSystem effect = Instantiate(_hitEffectPrefab);
-            effect.transform.position = hitInfo.point; // 맞은 자리
-            effect.transform.forward = hitInfo.normal; // 수직 위치로 회전
-            effect.Play();
-            
+            // 맞은 자리에서 수직 방향으로 풀의 이펙트를 재생한다.
+            EffectPool.Instance.Play(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+
             DamageInfo damageInfo = new DamageInfo();
             damageInfo.Value = _damage;
             damageInfo.HitPoint = hitInfo.point;
@@ -168,7 +167,7 @@ public class PlayerGunFire : MonoBehaviour
 
         Vector3 startPoint = _muzzle != null
             ? _muzzle.position
-            : Camera.main.transform.TransformPoint(_tracerCameraOffset);
+            : _cameraTransform.TransformPoint(_tracerCameraOffset);
         _tracerCoroutine = StartCoroutine(Tracer_Coroutine(startPoint, endPoint));
     }
 
