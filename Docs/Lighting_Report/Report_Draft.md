@@ -102,9 +102,19 @@ Realtime 조명 구조는 유지하되 그림자 비용을 줄이고, 환경광�
 | Profiler CPU (선택 프레임) | 3.15 ms | 3.06 ms |
 
 ### 증거
-- Game 화면: `before_game.png` / `after_game.png` (시작 화면 1장씩)
-- Stats + Profiler: `before_stats_profiler.png` / `after_stats_profiler.png`
-- 수치: `perf_before.json` / `perf_after.json`
+수치: `perf_before.json` / `perf_after.json`
+
+**게임 화면**
+
+![Before (단계 1 전)](before_game.png)
+
+![After (단계 1 후)](after_game.png)
+
+**Stats + Profiler**
+
+![Before](before_stats_profiler.png)
+
+![After](after_stats_profiler.png)
 
 ### 분석
 - **효과가 확인된 것**: Shadow Distance 50→30과 Cascade 4→2로 그림자 맵에 그려지는 물체가 줄어 Shadow Casters가 약 절반으로 줄었고, 그림자 패스의 삼각형·드로우콜이 함께 줄었다.
@@ -156,9 +166,23 @@ Color Adjustments를 추가해 색감을 개선하고(2-A), 비용이 큰 Bloom 
 | Profiler CPU (선택 프레임) | 2.87 ms | 3.20 ms | 3.22 ms |
 
 ### 증거
-- Game 화면: `s2_before_game.png` → `s2a_game.png` → `s2b_game.png`
-- Stats + Profiler: `s2_before_stats_profiler.png` → `s2a_stats_profiler.png` → `s2b_stats_profiler.png`
-- 수치: `perf_s1_base.json` → `perf_s2a_coloradj.json` → `perf_s2b_trim.json`
+수치: `perf_s1_base.json` → `perf_s2a_coloradj.json` → `perf_s2b_trim.json`
+
+**게임 화면**
+
+![Before (단계 1 후 상태)](s2_before_game.png)
+
+![2-A (Color Adjustments 추가)](s2a_game.png)
+
+![2-B (Bloom·SSAO 절감)](s2b_game.png)
+
+**Stats + Profiler**
+
+![Before](s2_before_stats_profiler.png)
+
+![2-A](s2a_stats_profiler.png)
+
+![2-B](s2b_stats_profiler.png)
 
 ### 분석
 - **2-A (Color Adjustments)**: 비용 변화가 없다(2.44→2.40ms, 오차 범위). 색 보정은 이미 돌고 있는 후처리 패스 안에서 처리되어 추가 패스가 생기지 않기 때문으로 보인다. 화면은 따뜻한 톤과 대비가 조금 강해졌다.
@@ -218,9 +242,19 @@ Color Adjustments를 추가해 색감을 개선하고(2-A), 비용이 큰 Bloom 
 **Stats·Profiler 화면** (중앙값 프레임): Batches 151, Tris 242.4k, SetPass 56, Shadow Casters 2, Profiler CPU 2.51ms
 
 ### 증거
-- Game 화면: `s2b_game.png` → `s3_game.png`
-- Stats + Profiler: `s2b_stats_profiler.png` → `s3_stats_profiler.png`
-- 수치: `perf_s2b_trim.json` → `perf_s3_baked.json`
+수치: `perf_s2b_trim.json` → `perf_s3_baked.json`
+
+**게임 화면** (Before는 단계 2 후 화면, After는 단계 3 후 화면)
+
+![Before (단계 2 후)](s2b_game.png)
+
+![After (단계 3 후)](s3_game.png)
+
+**Stats + Profiler**
+
+![Before (단계 2 후)](s2b_stats_profiler.png)
+
+![After (단계 3 후)](s3_stats_profiler.png)
 
 ### 분석
 - **가장 큰 효과는 Shadow Casters 342→2**: Shadowmask 모드에서는 정적 오브젝트의 그림자가 베이크되어 실시간 그림자 맵에는 동적 오브젝트(플레이어)만 그려진다. 그 결과 그림자 패스의 Draw Calls와 Triangles가 함께 줄었다(Draw Calls -146, Tris -43k).
@@ -297,9 +331,13 @@ Color Adjustments를 추가해 색감을 개선하고(2-A), 비용이 큰 Bloom 
 | Total Used Memory | 2146.1 MB | 2194.6 MB | +48.5 MB (측정 세션 편차 포함) |
 
 ### 증거
-- Stats + Profiler: `s4_before_stats_profiler.png` → `s4_after_stats_profiler.png`
-- 수치: `perf_s4_before_zombies.json` → `perf_s4_after_zombies.json`
-- 마커·사격 테스트 값은 Profiler 마커와 `Fire()` 호출 실측 결과이며 위 표에 기록했다.
+수치: `perf_s4_before_zombies.json` → `perf_s4_after_zombies.json`. 마커·사격 테스트 값은 Profiler 마커와 `Fire()` 호출 실측 결과이며 위 표에 기록했다.
+
+**Stats + Profiler** (좀비 10마리 추격 장면)
+
+![Before (수정 전 코드)](s4_before_stats_profiler.png)
+
+![After (수정 후 코드)](s4_after_stats_profiler.png)
 
 ### 분석
 - **`Zombie.Update()` -70%**: 경로 재계산을 매 프레임에서 0.2초마다로 줄인 효과다. 다만 절대값이 좀비 1마리·프레임당 약 0.002ms로 이미 작아서 **전체 프레임 시간(3.19ms)에는 변화가 없었다**. 이 장면에서 CPU 시간은 렌더링·애니메이터가 대부분이고 좀비 스크립트는 1% 미만이다.
@@ -372,9 +410,25 @@ Profiler의 Texture Memory(328MB)에는 씬 의존 에셋 외에 에디터·UI·
 **화질**: `s5_before_hangar.png` ↔ `s5_after_hangar.png` (Hangar 벽을 약 14m 거리에서 촬영), `s5_before_container.png` ↔ `s5_after_container.png` (컨테이너를 약 7m 거리에서 촬영). 육안으로 눈에 띄는 차이는 없었다.
 
 ### 증거
-- 수치: `ram_s5_before_after.json`
-- Profiler: `s5_before_profiler.png` → `s5_after_profiler.png` (Game 뷰 + CPU/Rendering/Memory 모듈)
-- 화면: `s5_before_hangar.png` → `s5_after_hangar.png`, `s5_before_container.png` → `s5_after_container.png`
+수치: `ram_s5_before_after.json`
+
+**Profiler** (Game 뷰 + CPU/Rendering/Memory 모듈)
+
+![Before (2048)](s5_before_profiler.png)
+
+![After (1024)](s5_after_profiler.png)
+
+**화질 비교: Hangar 벽 (약 14m)**
+
+![Before (2048)](s5_before_hangar.png)
+
+![After (1024)](s5_after_hangar.png)
+
+**화질 비교: 컨테이너 (약 7m)**
+
+![Before (2048)](s5_before_container.png)
+
+![After (1024)](s5_after_container.png)
 
 ### 분석
 - **씬 텍스처 -28%, 런타임 Texture Memory -9.4%**: 변경 대상이 전체 텍스처 메모리의 일부(씬 의존 113.7MB 중 약 32MB)이고, 나머지는 에디터·UI 텍스처 등이라 런타임 합계에서는 감소율이 작아 보인다.
@@ -422,7 +476,7 @@ Profiler의 Texture Memory(328MB)에는 씬 의존 에셋 외에 에디터·UI·
 - 직접 설정한 값과 AI가 제안한 값의 차이, AI 도움이 효과적이었던 부분과 한계를 적는다.
 
 ## 첨부 파일 (`Docs/Lighting_Report/`)
-- `perf_before.json`, `perf_after.json`: 900프레임 평균 측정 결과
-- `before_game.png`, `after_game.png`: 게임 화면
-- `before_stats_profiler.png`, `after_stats_profiler.png`: Stats와 Profiler
+- `perf_*.json`, `ram_s5_before_after.json`: 단계별 측정 결과 (`invalid_step2a_profiler_on.json`은 Profiler가 켜진 채 잘못 측정한 참고용 파일)
+- `*_game.png`, `*_hangar.png`, `*_container.png`: 게임 화면 Before/After
+- `*_stats_profiler.png`, `*_profiler.png`: Stats와 Profiler 화면
 - 측정 코드: `Assets/02.Scripts/Test/PerfSampler.cs`
