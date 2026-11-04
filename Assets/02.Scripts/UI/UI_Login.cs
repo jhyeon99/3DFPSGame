@@ -31,7 +31,7 @@ public class UI_Login : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _registerMessageText;
 
     [Header("이동할 씬")]
-    [SerializeField] private string _gameSceneName = "GameScene";
+    [SerializeField] private string _gameSceneName = "LoadingScene";  // 로그인 후 로딩 씬을 거쳐 게임으로 넘어간다.
 
     [Header("연출")]
     [SerializeField] private Image _fadeImage;
