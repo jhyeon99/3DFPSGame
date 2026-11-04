@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,7 @@ public enum GameState
 {
     Ready,
     Playing,
+    Paused,
     GameOver
 }
 
@@ -46,12 +48,58 @@ public class GameManager : MonoBehaviour
         _state = GameState.Playing;
     }
 
+    public event Action OnGameOver;
+
     public void GameOver()
     {
         _state = GameState.GameOver;
-        
+
         _stateText.gameObject.SetActive(true);
         _stateText.text = "게임 오버";
         _stateText.color = Color.red;
+
+        ShowCursor();
+        OnGameOver?.Invoke();
+    }
+
+    // 일시정지: 게임 시간을 멈추고 커서를 보여준다.
+    public void Pause()
+    {
+        if (_state != GameState.Playing) return;
+
+        _state = GameState.Paused;
+        Time.timeScale = 0f;
+        ShowCursor();
+    }
+
+    // 재개: 게임 시간을 되돌리고 커서를 잠근다.
+    public void Resume()
+    {
+        if (_state != GameState.Paused) return;
+
+        _state = GameState.Playing;
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void ShowCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    // 씬 전환 전에 멈춘 시간을 원래대로 돌린다.
+    public void RestoreTimeScale()
+    {
+        Time.timeScale = 1f;
+    }
+
+    private void OnDestroy()
+    {
+        if (_instance == this)
+        {
+            _instance = null;
+        }
     }
 }
