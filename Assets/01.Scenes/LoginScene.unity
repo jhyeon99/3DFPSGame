@@ -714,11 +714,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 581893643}
-  m_Father: {fileID: 1163986668}
+  m_Father: {fileID: 1797026322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155, y: -205}
+  m_AnchoredPosition: {x: -155, y: -215}
   m_SizeDelta: {x: 290, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &385684342
@@ -765,9 +765,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1223099836}
-        m_TargetAssemblyTypeName: UI_Login, Assembly-CSharp
-        m_MethodName: OnRegisterClicked
+      - m_Target: {fileID: 2004557231}
+        m_TargetAssemblyTypeName: Temp_Login, Assembly-CSharp
+        m_MethodName: Register
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1063,7 +1063,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 155, y: -165}
+  m_AnchoredPosition: {x: 155, y: -215}
   m_SizeDelta: {x: 290, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &450072491
@@ -1110,9 +1110,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1223099836}
-        m_TargetAssemblyTypeName: UI_Login, Assembly-CSharp
-        m_MethodName: ShowRegister
+      - m_Target: {fileID: 2004557231}
+        m_TargetAssemblyTypeName: Temp_Login, Assembly-CSharp
+        m_MethodName: GotoRegister
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1331,7 +1331,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1468,7 +1468,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2364,7 +2364,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2989bfca0b01b1940841b9931994af36, type: 2}
   m_sharedMaterial: {fileID: -9037541407386866989, guid: 2989bfca0b01b1940841b9931994af36, type: 2}
@@ -2386,7 +2386,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2615,7 +2615,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -90}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 600, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1129175592
@@ -2749,10 +2749,7 @@ RectTransform:
   m_Children:
   - {fileID: 605185754}
   - {fileID: 1813543453}
-  - {fileID: 1396900244}
   - {fileID: 68192192}
-  - {fileID: 385684341}
-  - {fileID: 1705317419}
   m_Father: {fileID: 2129726774}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3065,7 +3062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1223099836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3343,11 +3340,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 760992256}
-  m_Father: {fileID: 1163986668}
+  m_Father: {fileID: 1797026322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -70}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 600, y: 56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1396900245
@@ -3943,11 +3940,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 477619738}
-  m_Father: {fileID: 1163986668}
+  m_Father: {fileID: 1797026322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 155, y: -205}
+  m_AnchoredPosition: {x: 155, y: -215}
   m_SizeDelta: {x: 290, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1705317420
@@ -3994,9 +3991,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1223099836}
-        m_TargetAssemblyTypeName: UI_Login, Assembly-CSharp
-        m_MethodName: ShowLogin
+      - m_Target: {fileID: 2004557231}
+        m_TargetAssemblyTypeName: Temp_Login, Assembly-CSharp
+        m_MethodName: GotoLogin
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4287,7 +4284,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155, y: -165}
+  m_AnchoredPosition: {x: -155, y: -215}
   m_SizeDelta: {x: 290, y: 68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1782891548
@@ -4334,9 +4331,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1223099836}
-        m_TargetAssemblyTypeName: UI_Login, Assembly-CSharp
-        m_MethodName: OnLoginClicked
+      - m_Target: {fileID: 2004557231}
+        m_TargetAssemblyTypeName: Temp_Login, Assembly-CSharp
+        m_MethodName: Login
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4572,6 +4569,9 @@ RectTransform:
   - {fileID: 1129175591}
   - {fileID: 1782891547}
   - {fileID: 450072490}
+  - {fileID: 1396900244}
+  - {fileID: 385684341}
+  - {fileID: 1705317419}
   m_Father: {fileID: 2129726774}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4788,6 +4788,58 @@ MonoBehaviour:
   m_EffectColor: {r: 0.8, g: 0.2, b: 0.12, a: 0.55}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!1 &2004557230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2004557232}
+  - component: {fileID: 2004557231}
+  m_Layer: 0
+  m_Name: '@TempLogin'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2004557231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004557230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083ec7a1560b0ff4bada50ede063f611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Temp_Login
+  _idInput: {fileID: 448553707}
+  _passwordInput: {fileID: 40872560}
+  _passwordConfirmInput: {fileID: 1396900247}
+  _loginButton: {fileID: 1782891548}
+  _gotoRegisterButton: {fileID: 450072491}
+  _registerButton: {fileID: 385684342}
+  _gotoLoginButton: {fileID: 1705317420}
+  _messageText: {fileID: 1129175593}
+--- !u!4 &2004557232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004557230}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2018520657
 GameObject:
   m_ObjectHideFlags: 0
@@ -4854,7 +4906,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 3434263218
   m_fontColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.8}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4867,7 +4919,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -5253,3 +5305,4 @@ SceneRoots:
   - {fileID: 2129726774}
   - {fileID: 1239584385}
   - {fileID: 1223099837}
+  - {fileID: 2004557232}
