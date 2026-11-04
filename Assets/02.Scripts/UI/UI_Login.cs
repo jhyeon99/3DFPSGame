@@ -1,6 +1,8 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// 로그인/회원가입 화면. 계정은 학습용으로 PlayerPrefs에 저장한다.
@@ -30,6 +32,12 @@ public class UI_Login : MonoBehaviour
 
     [Header("이동할 씬")]
     [SerializeField] private string _gameSceneName = "GameScene";
+
+    [Header("연출")]
+    [SerializeField] private Image _fadeImage;
+    [SerializeField] private float _fadeDuration = 0.9f;
+
+    private bool _isLoading;
 
     private void Start()
     {
@@ -66,20 +74,69 @@ public class UI_Login : MonoBehaviour
 
         if (id.Length == 0 || password.Length == 0)
         {
-            _loginMessageText.text = "아이디와 비밀번호를 입력해 주세요.";
+            ShowLoginError("아이디와 비밀번호를 입력해 주세요.");
             return;
         }
 
         string key = AccountKeyPrefix + id;
         if (!PlayerPrefs.HasKey(key) || PlayerPrefs.GetString(key) != HashPassword(password))
         {
-            _loginMessageText.text = "아이디 또는 비밀번호가 올바르지 않습니다.";
+            ShowLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
             return;
         }
 
         PlayerPrefs.SetString(LastLoginIdKey, id);
         PlayerPrefs.Save();
+        StartCoroutine(LoadGame_Coroutine());
+    }
+
+    private IEnumerator LoadGame_Coroutine()
+    {
+        if (_isLoading) yield break;
+        _isLoading = true;
+
+        // 화면을 어둡게 덮으면서 입력도 막는다.
+        _fadeImage.gameObject.SetActive(true);
+        _fadeImage.raycastTarget = true;
+
+        float elapsed = 0f;
+        while (elapsed < _fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            _fadeImage.color = new Color(0f, 0f, 0f, Mathf.Clamp01(elapsed / _fadeDuration));
+            yield return null;
+        }
+
         SceneManager.LoadScene(_gameSceneName);
+    }
+
+    private IEnumerator Shake_Coroutine(RectTransform target)
+    {
+        const float duration = 0.3f;
+        const float range = 14f;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float damper = 1f - elapsed / duration;
+            target.anchoredPosition = new Vector2(Mathf.Sin(elapsed * 80f) * range * damper, 0f);
+            yield return null;
+        }
+
+        target.anchoredPosition = Vector2.zero;
+    }
+
+    private void ShowLoginError(string message)
+    {
+        _loginMessageText.text = message;
+        StartCoroutine(Shake_Coroutine((RectTransform)_loginPanel.transform));
+    }
+
+    private void ShowRegisterError(string message)
+    {
+        _registerMessageText.text = message;
+        StartCoroutine(Shake_Coroutine((RectTransform)_registerPanel.transform));
     }
 
     public void OnRegisterClicked()
@@ -89,26 +146,26 @@ public class UI_Login : MonoBehaviour
 
         if (id.Length < MinIdLength)
         {
-            _registerMessageText.text = $"아이디는 {MinIdLength}자 이상이어야 합니다.";
+            ShowRegisterError($"아이디는 {MinIdLength}자 이상이어야 합니다.");
             return;
         }
 
         if (password.Length < MinPasswordLength)
         {
-            _registerMessageText.text = $"비밀번호는 {MinPasswordLength}자 이상이어야 합니다.";
+            ShowRegisterError($"비밀번호는 {MinPasswordLength}자 이상이어야 합니다.");
             return;
         }
 
         if (password != _registerConfirmInput.text)
         {
-            _registerMessageText.text = "비밀번호가 일치하지 않습니다.";
+            ShowRegisterError("비밀번호가 일치하지 않습니다.");
             return;
         }
 
         string key = AccountKeyPrefix + id;
         if (PlayerPrefs.HasKey(key))
         {
-            _registerMessageText.text = "이미 존재하는 아이디입니다.";
+            ShowRegisterError("이미 존재하는 아이디입니다.");
             return;
         }
 
